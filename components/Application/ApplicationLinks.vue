@@ -1,0 +1,135 @@
+<template>
+  <v-card outlined>
+    <v-card-title>Links</v-card-title>
+    <div class="px-4">
+      <v-row>
+        <v-col>
+          <v-combobox
+            v-model="link.Tag"
+            return-object
+            label="Link type"
+            hint="Select link type"
+            persistent-hint
+            dense
+            outlined
+            :items="linkTypes"
+          ></v-combobox>
+        </v-col>
+        <v-col>
+          <v-text-field
+            v-model="link.url"
+            outlined
+            label="Link"
+            dense
+          ></v-text-field>
+        </v-col>
+        <v-col cols="2">
+          <v-btn @click="addLink" outlined>Add</v-btn>
+        </v-col>
+      </v-row>
+    </div>
+
+    <v-card outlined class="ma-4" v-if="applicationLinks.length">
+      <v-list dense>
+        <template v-for="(link, index) in applicationLinks">
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon color="grey"> mdi-link </v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ link.Tag.name }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                <a target="_blank" :href="link.url">{{ link.url }}</a>
+              </v-list-item-subtitle>
+            </v-list-item-content>
+
+            <v-list-item-icon>
+              <v-btn @click="removeLink(link.id)" x-small icon>
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </v-list-item-icon>
+          </v-list-item>
+          <v-divider class="my-1" v-if="index !== applicationLinks.length - 1">
+          </v-divider>
+        </template>
+      </v-list>
+    </v-card>
+  </v-card>
+</template>
+
+<script>
+import { v4 as uuidv4 } from "uuid";
+import { sortBy } from "lodash";
+
+const createLink = ({ Tag = null, url = "" } = {}) => ({
+  Tag,
+  url,
+});
+export default {
+  props: {
+    value: {
+      type: Array,
+      default: () => [],
+    },
+  },
+  data: function () {
+    return {
+      linkTypes: [],
+      link: createLink(),
+    };
+  },
+  computed: {
+    applicationLinks: {
+      get() {
+        return sortBy(this.value, ["type"]);
+      },
+      set(value) {
+        this.$emit("input", value);
+      },
+    },
+  },
+  watch: {
+    value: function () {
+      this.link = createLink();
+    },
+  },
+  created() {
+    this.loadLinkTypes();
+  },
+  methods: {
+    addLink() {
+      const link = {
+        id: uuidv4(),
+        Tag: {
+          id: this.link.Tag.value,
+          name: this.link.Tag.text,
+        },
+        url: this.link.url,
+      };
+
+      this.applicationLinks.push(link);
+      this.applicationLinks = this.applicationLinks;
+      this.link = createLink();
+    },
+    removeLink(id) {
+      this.applicationLinks = this.applicationLinks.filter((i) => i.id !== id);
+    },
+    loadLinkTypes() {
+      return this.$axios
+        .get("/api/v1/tags/for-select/link_type_tags")
+        .then((r) => {
+          this.linkTypes = r.data.items.map((i) => {
+            return {
+              id: null,
+              value: i.id,
+              text: i.name,
+            };
+          });
+        });
+    },
+  },
+};
+</script>
