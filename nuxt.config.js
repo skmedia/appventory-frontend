@@ -37,6 +37,7 @@ export default {
     '@/plugins/axios',
     '@/plugins/api',
     '@/plugins/vuelidate',
+    '@/plugins/ui-helper',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -83,6 +84,7 @@ export default {
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
+    treeShake: true,
     customVariables: ['~/assets/variables.scss'],
     theme: {
       dark: true

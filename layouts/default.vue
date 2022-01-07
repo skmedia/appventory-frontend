@@ -7,7 +7,7 @@
       fixed
       app
     >
-      <v-list-item>
+      <v-list-item class="blue">
         <v-list-item-content>
           <v-list-item-title class="text-h6"> AppVento </v-list-item-title>
           <v-list-item-subtitle>Application Repository</v-list-item-subtitle>
@@ -94,6 +94,7 @@
       <v-container>
         <Nuxt />
         <Settings />
+        <Notification ref="notification" />
       </v-container>
     </v-main>
 
@@ -112,10 +113,8 @@
 
 <script>
 import { mapMutations } from "vuex";
-import Settings from "../components/Settings.vue";
 
 export default {
-  components: { Settings },
   data() {
     return {
       showSearch: false,
@@ -154,6 +153,9 @@ export default {
       rightDrawer: false,
       title: "Application Repository",
     };
+  },
+  mounted() {
+    this.$root.notification = this.$refs.notification;
   },
   methods: {
     ...mapMutations({

@@ -7,17 +7,10 @@
     draggable
   >
     <v-card>
-      <v-toolbar color="secondary">
-        <v-toolbar-title>
-          {{ tagGroup && tagGroup.name }}: manage tag types
-        </v-toolbar-title>
-        <v-spacer />
-        <v-toolbar-items>
-          <v-btn class="float-right" icon @click="hide()">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar-items>
-      </v-toolbar>
+      <DialogHeader
+        :title="tagGroup && tagGroup.name + ' / manage types'"
+        @close="hide()"
+      ></DialogHeader>
       <v-card-text class="mt-8">
         <v-form ref="form">
           <v-card class="d-flex pa-4" outlined>
@@ -26,8 +19,8 @@
               dense
               v-model="tagType.name"
               label="Name"
-              :error-messages="nameErrors"
               outlined
+              :error-messages="nameErrors"
               @input="$v.tagType.name.$touch()"
               @blur="$v.tagType.name.$touch()"
             />
@@ -75,7 +68,6 @@
 <script>
 import { v4 as uuidv4 } from "uuid";
 
-import { validationMixin } from "vuelidate";
 import { required, maxLength, email } from "vuelidate/lib/validators";
 
 const createTagType = ({ id = null, name = "" } = {}) => ({
@@ -83,7 +75,6 @@ const createTagType = ({ id = null, name = "" } = {}) => ({
   name,
 });
 export default {
-  mixins: [validationMixin],
   props: {
     show: {
       type: Boolean,
@@ -120,6 +111,7 @@ export default {
       if (val) {
         this.loadTagTypes();
         this.tagType = createTagType();
+        this.$v.$reset();
       }
     },
   },
@@ -131,13 +123,11 @@ export default {
     loadTagType(item) {
       Object.assign(this.tagType, item);
     },
-
     saveTagType() {
       this.$v.$touch();
       if (this.$v.$invalid) {
         return;
       }
-
       let req;
       if (this.tagType.id) {
         const payload = {
@@ -152,7 +142,6 @@ export default {
         };
         req = this.$axios.post(`/api/v1/tag-types`, payload);
       }
-
       req.then((r) => {
         this.$v.$reset();
         this.tagType = createTagType();

@@ -13,6 +13,9 @@
             persistent-hint
             outlined
             :items="teamMemberRoles"
+            :error-messages="memberTagErrors"
+            @input="$v.teamMember.Tag.$touch()"
+            @blur="$v.teamMember.Tag.$touch()"
           ></v-combobox>
         </v-col>
         <v-col>
@@ -23,6 +26,9 @@
             dense
             outlined
             :items="users"
+            :error-messages="memberUserErrors"
+            @input="$v.teamMember.User.$touch()"
+            @blur="$v.teamMember.User.$touch()"
           ></v-combobox>
         </v-col>
         <v-col cols="2">
@@ -65,6 +71,7 @@
 <script>
 import { v4 as uuidv4 } from "uuid";
 import { sortBy } from "lodash";
+import { required } from "vuelidate/lib/validators";
 
 const createTeamMember = ({ Tag = null, User = null } = {}) => ({
   Tag,
@@ -75,6 +82,16 @@ export default {
     value: {
       type: Array,
       default: () => [],
+    },
+  },
+  validations: {
+    teamMember: {
+      Tag: {
+        required,
+      },
+      User: {
+        required,
+      },
     },
   },
   data: function () {
@@ -93,10 +110,23 @@ export default {
         this.$emit("input", value);
       },
     },
+    memberTagErrors() {
+      const errors = [];
+      if (!this.$v.teamMember.Tag.$dirty) return errors;
+      !this.$v.teamMember.Tag.required && errors.push("Role is required.");
+      return errors;
+    },
+    memberUserErrors() {
+      const errors = [];
+      if (!this.$v.teamMember.User.$dirty) return errors;
+      !this.$v.teamMember.User.required && errors.push("User is required.");
+      return errors;
+    },
   },
   watch: {
     value: function () {
       this.teamMember = createTeamMember();
+      this.$v.$reset();
     },
   },
   created() {
@@ -105,6 +135,11 @@ export default {
   },
   methods: {
     addTeamMember() {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
+
       const teamMember = {
         id: uuidv4(),
         tagId: this.teamMember.Tag.value,
@@ -118,6 +153,7 @@ export default {
       this.teamMembers.push(teamMember);
       this.teamMembers = this.teamMembers;
       this.teamMember = createTeamMember();
+      this.$v.$reset();
     },
     removeTeamMember(id) {
       this.teamMembers = this.teamMembers.filter((i) => i.id !== id);

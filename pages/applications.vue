@@ -1,16 +1,15 @@
 <template>
   <div>
     <v-card>
-      <v-card-title class="secondary">
-        Applications
+      <PageHeader title="Applications">
         <v-btn
-          class="ml-auto"
-          elevation="2"
+          class="ml-auto blue lighten-1"
+          outlined
           @click="showApplicationForm = true"
         >
           Add
         </v-btn>
-      </v-card-title>
+      </PageHeader>
 
       <v-card-text>
         <v-text-field
@@ -19,12 +18,12 @@
           label="Search"
           single-line
           hide-details
+          outlined
         />
       </v-card-text>
 
       <v-card-text>
         <v-data-table
-          flat
           :headers="headers"
           :items="items"
           :options.sync="options"
@@ -66,15 +65,14 @@
 
 <script>
 import { debounce } from "lodash";
-import ApplicationForm from "../components/Application/ApplicationForm.vue";
-import ConfirmDialog from "../components/ConfirmDialog.vue";
 
 let apiSearch;
 
 export default {
-  components: { ApplicationForm, ConfirmDialog },
   data() {
     return {
+      notificationMessage: "",
+      showNotification: false,
       activeApplication: {},
       showApplicationForm: false,
       total: 0,
@@ -167,7 +165,6 @@ export default {
       isNewApplication,
     }) {
       const params = application;
-
       let filesToAdd = [];
       if (newFiles.length) {
         let formData = new FormData();
@@ -188,8 +185,9 @@ export default {
         filesToAdd = fileUploadResponse.data.fileList;
       }
 
+      let result;
       if (isNewApplication) {
-        return this.$axios
+        result = this.$axios
           .post("/api/v1/applications", {
             ...application,
             filesToAdd,
@@ -203,7 +201,7 @@ export default {
             console.error("save application error: ", e);
           });
       } else {
-        return this.$axios
+        result = this.$axios
           .put(`/api/v1/applications/${application.id}`, {
             ...application,
             filesToAdd,
@@ -218,13 +216,23 @@ export default {
             console.error("update application error: ", e);
           });
       }
+
+      result
+        .catch((e) => {
+          this.$root.notification.show({
+            message: "An error occurred",
+            color: "red",
+          });
+        })
+        .then(() => {
+          this.$root.notification.show({ message: "Application saved" });
+        });
     },
     async loadData() {
       const params = {
         ...this.options,
         search: this.search,
       };
-
       return this.$applicationApi.index(params).then((r) => {
         return {
           items: r.items,

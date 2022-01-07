@@ -6,15 +6,8 @@
     overlay-opacity=".7"
   >
     <v-card>
-      <v-toolbar color="secondary">
-        <v-toolbar-title>User</v-toolbar-title>
-        <v-spacer />
-        <v-toolbar-items>
-          <v-btn icon @click="hide()">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar-items>
-      </v-toolbar>
+      <DialogHeader title="User" @close="hide()"></DialogHeader>
+
       <v-card-text class="mt-8">
         <v-row>
           <v-col cols="12">
@@ -24,7 +17,9 @@
               hint="firstname of the user"
               persistent-hint
               outlined
-              required
+              :error-messages="firstNameErrors"
+              @input="$v.user.firstName.$touch()"
+              @blur="$v.user.firstName.$touch()"
             />
           </v-col>
           <v-col cols="12">
@@ -34,6 +29,9 @@
               hint="lastname of the user"
               persistent-hint
               outlined
+              :error-messages="lastNameErrors"
+              @input="$v.user.lastName.$touch()"
+              @blur="$v.user.lastName.$touch()"
             />
           </v-col>
           <v-col cols="12">
@@ -43,6 +41,9 @@
               hint="Email of the user"
               persistent-hint
               outlined
+              :error-messages="emailErrors"
+              @input="$v.user.email.$touch()"
+              @blur="$v.user.email.$touch()"
             />
           </v-col>
         </v-row>
@@ -59,21 +60,13 @@
         <v-btn color="blue darken-1" text @click="hide()"> Close </v-btn>
         <v-btn color="blue darken-1" text @click="save()"> Save </v-btn>
       </v-card-actions>
-
-      <!--
-      <v-card class="pa-4">
-        <v-card-title>User object</v-card-title>
-        <v-card-text>
-          <pre>{{ user }}</pre>
-        </v-card-text>
-      </v-card>
-      -->
     </v-card>
   </v-dialog>
 </template>
 
 <script>
 import { v4 as uuidv4 } from "uuid";
+import { required, email } from "vuelidate/lib/validators";
 
 const createUser = ({
   id = uuidv4(),
@@ -100,6 +93,13 @@ export default {
       default: false,
     },
   },
+  validations: {
+    user: {
+      firstName: { required },
+      lastName: { required },
+      email: { required, email },
+    },
+  },
   data: function () {
     return {
       isNewUser: true,
@@ -107,11 +107,32 @@ export default {
       showDialog: this.show,
     };
   },
-  computed: {},
+  computed: {
+    firstNameErrors() {
+      const errors = [];
+      if (!this.$v.user.firstName.$dirty) return errors;
+      !this.$v.user.firstName.required && errors.push("Firstname is required.");
+      return errors;
+    },
+    lastNameErrors() {
+      const errors = [];
+      if (!this.$v.user.lastName.$dirty) return errors;
+      !this.$v.user.lastName.required && errors.push("Lastname is required.");
+      return errors;
+    },
+    emailErrors() {
+      const errors = [];
+      if (!this.$v.user.email.$dirty) return errors;
+      !this.$v.user.email.required && errors.push("Email is required.");
+      !this.$v.user.email.email && errors.push("Email is not valid.");
+      return errors;
+    },
+  },
   watch: {
     show: function (val) {
       this.showDialog = val;
       if (val) {
+        this.$v.$reset();
         // reset state
         this.user = createUser();
         this.isNewUser = true;
@@ -131,6 +152,11 @@ export default {
       this.$emit("hide-form");
     },
     save() {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
+
       this.$emit("save-user", {
         user: this.user,
         isNewUser: this.isNewUser,
@@ -138,9 +164,9 @@ export default {
     },
     loadUser() {
       return this.$axios
-        .get(`/api/v1/users/${this.incomingUser.id}`)
-        .then((r) => {
-          this.user = r.data;
+        .$get(`/api/v1/users/${this.incomingUser.id}`)
+        .then((user) => {
+          this.user = user;
         });
     },
   },

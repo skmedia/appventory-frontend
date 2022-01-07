@@ -5,16 +5,9 @@
     persistent
     overlay-opacity=".7"
   >
-    <v-card>
-      <v-toolbar color="secondary">
-        <v-toolbar-title>Application</v-toolbar-title>
-        <v-spacer />
-        <v-toolbar-items>
-          <v-btn icon @click="hide()">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar-items>
-      </v-toolbar>
+    <v-card id="top">
+      <DialogHeader title="Application" @close="hide()"></DialogHeader>
+
       <v-card-text class="mt-8">
         <v-row>
           <v-col cols="12">
@@ -24,6 +17,9 @@
               hint="name of the application"
               persistent-hint
               outlined
+              :error-messages="nameErrors"
+              @input="$v.application.name.$touch()"
+              @blur="$v.application.name.$touch()"
             />
           </v-col>
         </v-row>
@@ -39,6 +35,9 @@
               persistent-hint
               outlined
               :items="clients"
+              :error-messages="clientErrors"
+              @input="$v.application.client.$touch()"
+              @blur="$v.application.client.$touch()"
             ></v-combobox>
           </v-col>
         </v-row>
@@ -110,20 +109,21 @@
         <v-btn color="blue darken-1" text @click="save()"> Save </v-btn>
       </v-card-actions>
 
+      <!--
       <v-card class="pa-4">
         <v-card-title>Application object</v-card-title>
         <v-card-text>
           <pre>{{ application }}</pre>
         </v-card-text>
       </v-card>
+      -->
     </v-card>
   </v-dialog>
 </template>
 
 <script>
 import { v4 as uuidv4 } from "uuid";
-import ApplicationLinks from "./ApplicationLinks.vue";
-import ApplicationAssets from "./ApplicationAssets.vue";
+import { required } from "vuelidate/lib/validators";
 
 const createApplication = ({
   id = uuidv4(),
@@ -158,6 +158,12 @@ export default {
       default: false,
     },
   },
+  validations: {
+    application: {
+      name: { required },
+      client: { required },
+    },
+  },
   data: function () {
     return {
       isNewApplication: true,
@@ -168,17 +174,36 @@ export default {
       filesToUpload: [],
     };
   },
-  computed: {},
+  computed: {
+    nameErrors() {
+      const errors = [];
+      if (!this.$v.application.name.$dirty) return errors;
+      !this.$v.application.name.required && errors.push("Name is required.");
+      return errors;
+    },
+    clientErrors() {
+      const errors = [];
+      if (!this.$v.application.client.$dirty) return errors;
+      !this.$v.application.client.required &&
+        errors.push("Client is required.");
+      return errors;
+    },
+  },
   watch: {
     show: function (val) {
       this.showDialog = val;
       if (val) {
         // reset state
+        this.$v.$reset();
         this.application = createApplication();
         this.isNewApplication = true;
-        this.selectedFiles = [];
         this.filesToUpload = [];
-        this.filesToDelete = [];
+        this.$nextTick(() => {
+          setTimeout(() => {
+            console.log("to top!");
+            this.$uiHelper.scrollTo("dialog-header");
+          });
+        });
       }
     },
     app: function (val) {
@@ -198,6 +223,12 @@ export default {
       this.$emit("hide-form");
     },
     save() {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        this.$uiHelper.scrollTo("dialog-header");
+        return;
+      }
+
       this.$emit("save-application", {
         application: this.application,
         newFiles: this.filesToUpload,
@@ -230,6 +261,5 @@ export default {
       });
     },
   },
-  components: { ApplicationLinks, ApplicationAssets },
 };
 </script>

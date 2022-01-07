@@ -7,15 +7,7 @@
     draggable
   >
     <v-card>
-      <v-toolbar color="secondary" class="pr-0">
-        <v-toolbar-title>Tag</v-toolbar-title>
-        <v-spacer />
-        <v-toolbar-items>
-          <v-btn absolute right icon @click="hide()">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar-items>
-      </v-toolbar>
+      <DialogHeader title="Tag" @close="hide()"></DialogHeader>
       <v-card-text class="mt-8">
         <v-container>
           <v-row>
@@ -26,6 +18,9 @@
                 hint="name of the tag"
                 persistent-hint
                 outlined
+                :error-messages="nameErrors"
+                @input="$v.tag.name.$touch()"
+                @blur="$v.tag.name.$touch()"
               />
             </v-col>
             <v-col>
@@ -35,6 +30,9 @@
                 return-object
                 outlined
                 :items="tagTypes"
+                :error-messages="tagTypeErrors"
+                @input="$v.tag.TagType.$touch()"
+                @blur="$v.tag.TagType.$touch()"
               ></v-combobox>
             </v-col>
           </v-row>
@@ -51,13 +49,13 @@
 </template>
 
 <script>
-import { Vue } from "vue";
-import { sortBy, get } from "lodash";
 import { v4 as uuidv4 } from "uuid";
+import { required } from "vuelidate/lib/validators";
 
-const createTag = ({ id = uuidv4(), name = "" } = {}) => ({
+const createTag = ({ id = uuidv4(), name = "", TagType = null } = {}) => ({
   id,
   name,
+  TagType,
 });
 export default {
   props: {
@@ -76,6 +74,12 @@ export default {
       required: true,
     },
   },
+  validations: {
+    tag: {
+      name: { required },
+      TagType: { required },
+    },
+  },
   data: function () {
     return {
       isNewTag: true,
@@ -84,7 +88,20 @@ export default {
       tagTypes: [],
     };
   },
-  computed: {},
+  computed: {
+    nameErrors() {
+      const errors = [];
+      if (!this.$v.tag.name.$dirty) return errors;
+      !this.$v.tag.name.required && errors.push("Name is required.");
+      return errors;
+    },
+    tagTypeErrors() {
+      const errors = [];
+      if (!this.$v.tag.TagType.$dirty) return errors;
+      !this.$v.tag.TagType.required && errors.push("Type is required.");
+      return errors;
+    },
+  },
   watch: {
     show: function (val) {
       this.showDialog = val;
@@ -111,6 +128,10 @@ export default {
       this.$emit("hide-form");
     },
     save() {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
       this.$emit("save-tag", {
         tag: this.tag,
         isNewTag: this.isNewTag,

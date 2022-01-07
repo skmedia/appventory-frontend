@@ -14,17 +14,22 @@
 
     <v-container class="mb-6 rounded-0">
       <v-row>
-        <v-col class="pt-0">
-          <v-card>
-            <v-card-title class="pt-0">
-              <v-text-field
-                v-model="search"
-                append-icon="mdi-magnify"
-                label="Search"
-                single-line
-                hide-details
-              ></v-text-field>
-            </v-card-title>
+        <v-col class="">
+          <v-card class="pa-0 d-flex" flat dense>
+            <v-text-field
+              class="d-inline-block mr-2"
+              v-model="search"
+              outlined
+              dense
+              label="Search"
+              append-icon="mdi-magnify"
+              hide-details
+            ></v-text-field>
+            <div class="ml-auto">
+              <v-btn outlined icon @click="getDataFromApi">
+                <v-icon>mdi-refresh</v-icon>
+              </v-btn>
+            </div>
           </v-card>
         </v-col>
       </v-row>
@@ -40,7 +45,7 @@
             class="elevation-1"
           >
             <template #item.actions="{ item }">
-              <v-icon small class="mr-2" z @click="editTag(item)">
+              <v-icon small class="mr-2" @click="editTag(item)">
                 mdi-pencil
               </v-icon>
               <v-icon

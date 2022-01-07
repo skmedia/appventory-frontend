@@ -1,12 +1,15 @@
 <template>
   <div>
     <v-card>
-      <v-card-title class="secondary">
-        Clients
-        <v-btn class="ml-auto" elevation="2" @click="showClientForm = true">
+      <PageHeader title="Clients">
+        <v-btn
+          class="ml-auto blue lighten-1"
+          elevation="2"
+          @click="showClientForm = true"
+        >
           Add
         </v-btn>
-      </v-card-title>
+      </PageHeader>
 
       <v-card-text>
         <v-text-field
@@ -32,7 +35,13 @@
             <v-icon small class="mr-2" z @click="editItem(item)">
               mdi-pencil
             </v-icon>
-            <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+            <v-icon
+              :disabled="!!item.applications.length"
+              small
+              @click="deleteItem(item)"
+            >
+              mdi-delete
+            </v-icon>
           </template>
           <template #no-data>
             <v-btn color="primary"> Reset </v-btn>
@@ -53,13 +62,10 @@
 
 <script>
 import { debounce } from "lodash";
-import ClientForm from "../components/Client/ClientForm.vue";
-import ConfirmDialog from "../components/ConfirmDialog.vue";
 
 let apiSearch;
 
 export default {
-  components: { ClientForm, ConfirmDialog },
   data() {
     return {
       activeClient: {},

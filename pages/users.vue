@@ -1,12 +1,15 @@
 <template>
   <div>
     <v-card>
-      <v-card-title class="secondary">
-        Users
-        <v-btn class="ml-auto" elevation="2" @click="showUserForm = true">
+      <PageHeader title="Users">
+        <v-btn
+          class="ml-auto blue lighten-1"
+          elevation="2"
+          @click="showUserForm = true"
+        >
           Add
         </v-btn>
-      </v-card-title>
+      </PageHeader>
 
       <v-card-text>
         <v-text-field
@@ -53,13 +56,10 @@
 
 <script>
 import { debounce } from "lodash";
-import UserForm from "../components/User/UserForm.vue";
-import ConfirmDialog from "../components/ConfirmDialog.vue";
 
 let apiSearch;
 
 export default {
-  components: { UserForm, ConfirmDialog },
   data() {
     return {
       activeUser: {},
@@ -72,12 +72,6 @@ export default {
       options: {},
       headers: [
         {
-          text: "Email",
-          align: "start",
-          sortable: true,
-          value: "email",
-        },
-        {
           text: "Firstname",
           align: "start",
           sortable: true,
@@ -88,6 +82,12 @@ export default {
           align: "start",
           sortable: false,
           value: "lastName",
+        },
+        {
+          text: "Email",
+          align: "start",
+          sortable: true,
+          value: "email",
         },
         {
           text: "Actions",

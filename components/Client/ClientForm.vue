@@ -6,15 +6,7 @@
     overlay-opacity=".7"
   >
     <v-card>
-      <v-toolbar color="secondary">
-        <v-toolbar-title>Client</v-toolbar-title>
-        <v-spacer />
-        <v-toolbar-items>
-          <v-btn icon @click="hide()">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar-items>
-      </v-toolbar>
+      <DialogHeader title="Client" @close="hide()"></DialogHeader>
       <v-card-text class="mt-8">
         <v-row>
           <v-col cols="12">
@@ -24,7 +16,9 @@
               hint="name of the client"
               persistent-hint
               outlined
-              required
+              :error-messages="nameErrors"
+              @input="$v.client.name.$touch()"
+              @blur="$v.client.name.$touch()"
             />
           </v-col>
         </v-row>
@@ -41,21 +35,13 @@
         <v-btn color="blue darken-1" text @click="hide()"> Close </v-btn>
         <v-btn color="blue darken-1" text @click="save()"> Save </v-btn>
       </v-card-actions>
-
-      <!--
-      <v-card class="pa-4">
-        <v-card-title>Client object</v-card-title>
-        <v-card-text>
-          <pre>{{ client }}</pre>
-        </v-card-text>
-      </v-card>
-      -->
     </v-card>
   </v-dialog>
 </template>
 
 <script>
 import { v4 as uuidv4 } from "uuid";
+import { required } from "vuelidate/lib/validators";
 
 const createClient = ({ id = uuidv4(), name = "" } = {}) => ({
   id,
@@ -75,6 +61,11 @@ export default {
       default: false,
     },
   },
+  validations: {
+    client: {
+      name: { required },
+    },
+  },
   data: function () {
     return {
       isNewClient: true,
@@ -82,11 +73,19 @@ export default {
       showDialog: this.show,
     };
   },
-  computed: {},
+  computed: {
+    nameErrors() {
+      const errors = [];
+      if (!this.$v.client.name.$dirty) return errors;
+      !this.$v.client.name.required && errors.push("Name is required.");
+      return errors;
+    },
+  },
   watch: {
     show: function (val) {
       this.showDialog = val;
       if (val) {
+        this.$v.$reset();
         // reset state
         this.client = createClient();
         this.isNewClient = true;
@@ -106,6 +105,10 @@ export default {
       this.$emit("hide-form");
     },
     save() {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
       this.$emit("save-client", {
         client: this.client,
         isNewClient: this.isNewClient,

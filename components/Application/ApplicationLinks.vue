@@ -13,6 +13,9 @@
             dense
             outlined
             :items="linkTypes"
+            :error-messages="linkTagErrors"
+            @input="$v.link.Tag.$touch()"
+            @blur="$v.link.Tag.$touch()"
           ></v-combobox>
         </v-col>
         <v-col>
@@ -21,6 +24,9 @@
             outlined
             label="Link"
             dense
+            :error-messages="urlErrors"
+            @input="$v.link.url.$touch()"
+            @blur="$v.link.url.$touch()"
           ></v-text-field>
         </v-col>
         <v-col cols="2">
@@ -63,6 +69,7 @@
 <script>
 import { v4 as uuidv4 } from "uuid";
 import { sortBy } from "lodash";
+import { required, url } from "vuelidate/lib/validators";
 
 const createLink = ({ Tag = null, url = "" } = {}) => ({
   Tag,
@@ -81,6 +88,17 @@ export default {
       link: createLink(),
     };
   },
+  validations: {
+    link: {
+      Tag: {
+        required,
+      },
+      url: {
+        url,
+        required,
+      },
+    },
+  },
   computed: {
     applicationLinks: {
       get() {
@@ -90,10 +108,24 @@ export default {
         this.$emit("input", value);
       },
     },
+    linkTagErrors() {
+      const errors = [];
+      if (!this.$v.link.Tag.$dirty) return errors;
+      !this.$v.link.Tag.required && errors.push("Type is required.");
+      return errors;
+    },
+    urlErrors() {
+      const errors = [];
+      if (!this.$v.link.url.$dirty) return errors;
+      !this.$v.link.url.required && errors.push("Url is required.");
+      !this.$v.link.url.url && errors.push("Url is not valid.");
+      return errors;
+    },
   },
   watch: {
     value: function () {
       this.link = createLink();
+      this.$v.$reset();
     },
   },
   created() {
@@ -101,6 +133,11 @@ export default {
   },
   methods: {
     addLink() {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
+
       const link = {
         id: uuidv4(),
         Tag: {
@@ -110,6 +147,7 @@ export default {
         url: this.link.url,
       };
 
+      this.$v.$reset();
       this.applicationLinks.push(link);
       this.applicationLinks = this.applicationLinks;
       this.link = createLink();
