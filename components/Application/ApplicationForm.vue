@@ -60,7 +60,7 @@
               outlined
               :items="tags"
               item-value="id"
-              item-text="name"
+              item-text="label"
               chips
               label="Tags"
               persistent-placeholder
@@ -200,7 +200,6 @@ export default {
         this.filesToUpload = [];
         this.$nextTick(() => {
           setTimeout(() => {
-            console.log("to top!");
             this.$uiHelper.scrollTo("dialog-header");
           });
         });
@@ -250,14 +249,14 @@ export default {
     },
     loadTags() {
       return this.$axios
-        .get("/api/v1/tags/for-select/application_tags")
+        .$get("/api/v1/tags/for-select/application-tags")
         .then((r) => {
-          this.tags = r.data.items;
+          this.tags = r.items;
         });
     },
     loadClients() {
-      return this.$axios.get("/api/v1/clients/for-select").then((r) => {
-        this.clients = r.data.items;
+      return this.$axios.$get("/api/v1/clients/for-select").then((r) => {
+        this.clients = r.items;
       });
     },
   },

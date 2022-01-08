@@ -14,8 +14,8 @@
             outlined
             :items="linkTypes"
             :error-messages="linkTagErrors"
-            @input="$v.link.Tag.$touch()"
-            @blur="$v.link.Tag.$touch()"
+            @input="$v.link.tag.$touch()"
+            @blur="$v.link.tag.$touch()"
           ></v-combobox>
         </v-col>
         <v-col>
@@ -45,7 +45,7 @@
 
             <v-list-item-content>
               <v-list-item-title>
-                {{ link.Tag.name }}
+                {{ link.tag.label }}
               </v-list-item-title>
               <v-list-item-subtitle>
                 <a target="_blank" :href="link.url">{{ link.url }}</a>
@@ -71,8 +71,8 @@ import { v4 as uuidv4 } from "uuid";
 import { sortBy } from "lodash";
 import { required, url } from "vuelidate/lib/validators";
 
-const createLink = ({ Tag = null, url = "" } = {}) => ({
-  Tag,
+const createLink = ({ tag = null, url = "" } = {}) => ({
+  tag,
   url,
 });
 export default {
@@ -90,7 +90,7 @@ export default {
   },
   validations: {
     link: {
-      Tag: {
+      tag: {
         required,
       },
       url: {
@@ -110,8 +110,8 @@ export default {
     },
     linkTagErrors() {
       const errors = [];
-      if (!this.$v.link.Tag.$dirty) return errors;
-      !this.$v.link.Tag.required && errors.push("Type is required.");
+      if (!this.$v.link.tag.$dirty) return errors;
+      !this.$v.link.tag.required && errors.push("Type is required.");
       return errors;
     },
     urlErrors() {
@@ -140,9 +140,9 @@ export default {
 
       const link = {
         id: uuidv4(),
-        Tag: {
-          id: this.link.Tag.value,
-          name: this.link.Tag.text,
+        tag: {
+          id: this.link.tag.value,
+          name: this.link.tag.text,
         },
         url: this.link.url,
       };
@@ -157,13 +157,13 @@ export default {
     },
     loadLinkTypes() {
       return this.$axios
-        .get("/api/v1/tags/for-select/link_type_tags")
+        .get("/api/v1/tags/for-select/link-type-tags")
         .then((r) => {
           this.linkTypes = r.data.items.map((i) => {
             return {
               id: null,
               value: i.id,
-              text: i.name,
+              text: i.label,
             };
           });
         });

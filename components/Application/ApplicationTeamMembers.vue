@@ -5,7 +5,7 @@
       <v-row>
         <v-col>
           <v-combobox
-            v-model="teamMember.Tag"
+            v-model="teamMember.tag"
             return-object
             label="Role"
             dense
@@ -14,21 +14,21 @@
             outlined
             :items="teamMemberRoles"
             :error-messages="memberTagErrors"
-            @input="$v.teamMember.Tag.$touch()"
-            @blur="$v.teamMember.Tag.$touch()"
+            @input="$v.teamMember.tag.$touch()"
+            @blur="$v.teamMember.tag.$touch()"
           ></v-combobox>
         </v-col>
         <v-col>
           <v-combobox
-            v-model="teamMember.User"
+            v-model="teamMember.user"
             return-object
             label="Team member"
             dense
             outlined
             :items="users"
             :error-messages="memberUserErrors"
-            @input="$v.teamMember.User.$touch()"
-            @blur="$v.teamMember.User.$touch()"
+            @input="$v.teamMember.user.$touch()"
+            @blur="$v.teamMember.user.$touch()"
           ></v-combobox>
         </v-col>
         <v-col cols="2">
@@ -50,7 +50,7 @@
                 {{ teamMember.userFullName }}
               </v-list-item-title>
               <v-list-item-subtitle>
-                {{ teamMember.Tag.name }}
+                {{ teamMember.tag.label }}
               </v-list-item-subtitle>
             </v-list-item-content>
 
@@ -73,9 +73,9 @@ import { v4 as uuidv4 } from "uuid";
 import { sortBy } from "lodash";
 import { required } from "vuelidate/lib/validators";
 
-const createTeamMember = ({ Tag = null, User = null } = {}) => ({
-  Tag,
-  User,
+const createTeamMember = ({ tag = null, user = null } = {}) => ({
+  tag,
+  user,
 });
 export default {
   props: {
@@ -86,10 +86,10 @@ export default {
   },
   validations: {
     teamMember: {
-      Tag: {
+      tag: {
         required,
       },
-      User: {
+      user: {
         required,
       },
     },
@@ -112,14 +112,14 @@ export default {
     },
     memberTagErrors() {
       const errors = [];
-      if (!this.$v.teamMember.Tag.$dirty) return errors;
-      !this.$v.teamMember.Tag.required && errors.push("Role is required.");
+      if (!this.$v.teamMember.tag.$dirty) return errors;
+      !this.$v.teamMember.tag.required && errors.push("Role is required.");
       return errors;
     },
     memberUserErrors() {
       const errors = [];
-      if (!this.$v.teamMember.User.$dirty) return errors;
-      !this.$v.teamMember.User.required && errors.push("User is required.");
+      if (!this.$v.teamMember.user.$dirty) return errors;
+      !this.$v.teamMember.user.required && errors.push("User is required.");
       return errors;
     },
   },
@@ -142,13 +142,13 @@ export default {
 
       const teamMember = {
         id: uuidv4(),
-        tagId: this.teamMember.Tag.value,
-        userId: this.teamMember.User.value,
+        tagId: this.teamMember.tag.value,
+        userId: this.teamMember.user.value,
         Tag: {
-          id: this.teamMember.Tag.value,
-          name: this.teamMember.Tag.text,
+          id: this.teamMember.tag.value,
+          name: this.teamMember.user.text,
         },
-        userFullName: this.teamMember.User.text,
+        userFullName: this.teamMember.user.text,
       };
       this.teamMembers.push(teamMember);
       this.teamMembers = this.teamMembers;
@@ -160,13 +160,13 @@ export default {
     },
     loadTeamMemberRoles() {
       return this.$axios
-        .get("/api/v1/tags/for-select/project_role_tags")
+        .get("/api/v1/tags/for-select/project-role-tags")
         .then((r) => {
           this.teamMemberRoles = r.data.items.map((i) => {
             return {
               id: null,
               value: i.id,
-              text: i.name,
+              text: i.label,
             };
           });
         });

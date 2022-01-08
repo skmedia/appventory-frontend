@@ -8,7 +8,7 @@
   >
     <v-card>
       <DialogHeader
-        :title="tagGroup && tagGroup.name + ' / manage types'"
+        :title="tagGroup && tagGroup.label + ' / manage types'"
         @close="hide()"
       ></DialogHeader>
       <v-card-text class="mt-8">
@@ -17,12 +17,12 @@
             <v-text-field
               class="d-inline-block mr-2"
               dense
-              v-model="tagType.name"
-              label="Name"
+              v-model="tagType.label"
+              label="Label"
               outlined
-              :error-messages="nameErrors"
-              @input="$v.tagType.name.$touch()"
-              @blur="$v.tagType.name.$touch()"
+              :error-messages="labelErrors"
+              @input="$v.tagType.label.$touch()"
+              @blur="$v.tagType.label.$touch()"
             />
             <div class="ml-auto">
               <v-btn icon @click="saveTagType">
@@ -37,7 +37,7 @@
             <v-list-item-group>
               <template v-for="(item, i) in tagTypes">
                 <v-list-item>
-                  <v-list-item-content>{{ item.name }}</v-list-item-content>
+                  <v-list-item-content>{{ item.label }}</v-list-item-content>
                   <v-list-item-action>
                     <v-btn icon x-small @click="loadTagType(item)">
                       <v-icon>mdi-pencil</v-icon>
@@ -70,9 +70,9 @@ import { v4 as uuidv4 } from "uuid";
 
 import { required, maxLength, email } from "vuelidate/lib/validators";
 
-const createTagType = ({ id = null, name = "" } = {}) => ({
+const createTagType = ({ id = null, label = "" } = {}) => ({
   id,
-  name,
+  label,
 });
 export default {
   props: {
@@ -87,7 +87,7 @@ export default {
   },
   validations: {
     tagType: {
-      name: { required },
+      label: { required },
     },
   },
   data: function () {
@@ -98,10 +98,10 @@ export default {
     };
   },
   computed: {
-    nameErrors() {
+    labelErrors() {
       const errors = [];
-      if (!this.$v.tagType.name.$dirty) return errors;
-      !this.$v.tagType.name.required && errors.push("Name is required.");
+      if (!this.$v.tagType.label.$dirty) return errors;
+      !this.$v.tagType.label.required && errors.push("Label is required.");
       return errors;
     },
   },
@@ -137,7 +137,7 @@ export default {
       } else {
         const payload = {
           id: uuidv4(),
-          name: this.tagType.name,
+          label: this.tagType.label,
           tagGroupId: this.tagGroup.id,
         };
         req = this.$axios.post(`/api/v1/tag-types`, payload);
@@ -151,9 +151,9 @@ export default {
     loadTagTypes() {
       const tagCanBeDeleted = (tag) => {
         const relationCount = [
-          "ApplicationLink",
-          "ApplicationTeamMember",
-          "ApplicationTag",
+          "applicationLinks",
+          "applicationTeamMembers",
+          "applicationTags",
         ]
           .map((relation) => tag[relation].length)
           .reduce((count, initValue) => count + initValue, 0);
@@ -172,7 +172,7 @@ export default {
       if (
         await this.$refs.confirm.open(
           "Confirm",
-          `Are you sure you want to delete the tag type ${item.name}?`
+          `Are you sure you want to delete the tag type ${item.label}?`
         )
       ) {
         await this.$axios.delete(`/api/v1/tag-types/${item.id}`).then((r) => {

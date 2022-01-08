@@ -101,16 +101,16 @@ export default {
       options: {},
       headers: [
         {
-          text: "Name",
+          text: "Label",
           align: "start",
           sortable: true,
-          value: "name",
+          value: "label",
         },
         {
           text: "Type",
           align: "start",
           sortable: false,
-          value: "TagType.name",
+          value: "tagType.label",
         },
         {
           text: "Actions",
@@ -231,7 +231,7 @@ export default {
       if (
         await this.$refs.confirm.open(
           "Confirm",
-          `Are you sure you want to delete the tag ${item.name}?`
+          `Are you sure you want to delete the tag ${item.label}?`
         )
       ) {
         await this.$axios.delete(`/api/v1/tags/${item.id}`).then((r) => {

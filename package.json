@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "npm": "please-use-yarn",
-    "node": ">=16",
+    "node": ">=16 <17",
     "yarn": "^1.22"
   },
   "scripts": {

@@ -9,6 +9,7 @@ export default {
       cert: fs.readFileSync(path.resolve(__dirname, 'keys/cert.pem'))
     }
   },
+  ssr: false,
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -52,8 +53,13 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/auth-next'
   ],
+
+  router: {
+    middleware: ['auth']
+  },
 
   axios: {
     proxy: true
@@ -68,7 +74,30 @@ export default {
   },
 
   auth: {
+    redirect: {
+      login: '/login',
+      logout: '/',
+      callback: '/login',
+      home: '/'
+    },
     strategies: {
+      local: {
+        token: {
+          property: 'access_token',
+          global: true,
+          // required: true,
+          type: 'Bearer'
+        },
+        user: {
+          property: 'user',
+          autoFetch: true
+        },
+        endpoints: {
+          login: { url: '/api/auth/login', method: 'post' },
+          logout: { url: '/api/auth/logout', method: 'post' },
+          user: { url: '/api/auth/user', method: 'get' }
+        }
+      },
       google: {
         clientId: '465685495534-066r84qdd867bnkvlu4suqf493q9e11i.apps.googleusercontent.com',
         scope: ['profile', 'email', 'openid'],

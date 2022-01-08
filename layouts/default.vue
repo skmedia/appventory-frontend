@@ -44,7 +44,7 @@
               <v-btn x-small @click="toggleSettings()">
                 <v-icon x-small class="mr-1"> mdi-cogs </v-icon>Settings
               </v-btn>
-              <v-btn x-small>
+              <v-btn x-small @click="$auth.logout()">
                 <v-icon x-small class="mr-1"> mdi-logout </v-icon>Logout
               </v-btn>
             </v-list-item-subtitle>
