@@ -44,7 +44,7 @@
             </v-icon>
           </template>
           <template #no-data>
-            <v-btn color="primary"> Reset </v-btn>
+            <v-alert> No data found </v-alert>
           </template>
         </v-data-table>
       </v-card-text>

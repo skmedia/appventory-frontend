@@ -36,14 +36,15 @@
       </v-list>
       <v-divider />
 
+      <!--
       <template #append>
         <v-divider />
         <v-list-item>
           <v-list-item-avatar size="36">
-            <v-img src="https://cdn.vuetifyjs.com/images/lists/2.jpg" />
+            <v-avatar>{{ $auth.user.firstName }}</v-avatar>
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title v-text="'Kris Geens'" />
+            <v-list-item-title v-text="'auth.user.firstName'" />
             <v-list-item-subtitle class="mt-1">
               <v-btn x-small @click="toggleSettings()">
                 <v-icon x-small class="mr-1"> mdi-cogs </v-icon>Settings
@@ -55,6 +56,7 @@
           </v-list-item-content>
         </v-list-item>
       </template>
+      -->
     </v-navigation-drawer>
     <v-app-bar app flat>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
@@ -85,12 +87,13 @@
       <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" v-on="on">
-            <v-avatar size="36">
-              <v-img src="https://cdn.vuetifyjs.com/images/lists/2.jpg" />
+            <v-avatar size="36" class="primary">
+              {{ $auth.user.initials }}
             </v-avatar>
           </v-btn>
         </template>
         <v-list>
+          <!--
           <v-list-item @click="toggleSettings()">
             <v-list-item-action>
               <v-icon>mdi-cogs</v-icon>
@@ -99,6 +102,7 @@
               <v-list-item-title v-text="'Settings'" />
             </v-list-item-content>
           </v-list-item>
+          -->
 
           <v-list-item @click="$auth.logout()">
             <v-list-item-action>
