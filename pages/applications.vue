@@ -243,7 +243,7 @@ export default {
         ...this.options,
         search: this.search,
       };
-      return this.$applicationApi.index(params).then((r) => {
+      return this.$axios.$get("/api/v1/applications", params).then((r) => {
         return {
           items: r.items,
           total: r.meta.count,
