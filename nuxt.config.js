@@ -9,7 +9,6 @@ export default {
       cert: fs.readFileSync(path.resolve(__dirname, 'keys/cert.pem'))
     }
   },
-  ssr: false,
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
