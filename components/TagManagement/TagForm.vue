@@ -106,6 +106,7 @@ export default {
     show: function (val) {
       this.showDialog = val;
       if (val) {
+        this.$v.$reset();
         // reset state
         this.tag = createTag();
         this.isNewTag = true;

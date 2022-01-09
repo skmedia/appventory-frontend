@@ -1,31 +1,46 @@
 <template>
-  <v-card max-width="600px" class="mx-auto">
-    <PageHeader title="Login"> </PageHeader>
-    <v-card-text>
-      <v-form>
-        <v-text-field
-          type="email"
-          v-model="login.email"
-          label="Email"
-          outlined
-          :error-messages="emailErrors"
-          @input="$v.login.email.$touch()"
-          @blur="$v.login.email.$touch()"
-        />
+  <v-container fluid fill-height>
+    <v-layout justify-center>
+      <v-flex xs12 sm8 md6>
+        <v-layout align-center justify-center class="ma-10">
+          <v-subheader class="text-h3 text-overline">AppVento</v-subheader>
+          <v-icon x-large>mdi-domain</v-icon>
+        </v-layout>
+        <v-card tile class="elevation-12">
+          <PageHeader class="mb-4" title="Login"> </PageHeader>
+          <v-card-text>
+            <v-form>
+              <v-text-field
+                prepend-icon="mdi-account"
+                type="email"
+                v-model="login.email"
+                label="Email"
+                outlined
+                :error-messages="emailErrors"
+                @input="$v.login.email.$touch()"
+                @blur="$v.login.email.$touch()"
+              />
 
-        <v-text-field
-          type="password"
-          v-model="login.password"
-          label="Password"
-          outlined
-          :error-messages="passwordErrors"
-          @input="$v.login.password.$touch()"
-          @blur="$v.login.password.$touch()"
-        />
-        <v-btn @click="userLogin">Login</v-btn>
-      </v-form>
-    </v-card-text>
-  </v-card>
+              <v-text-field
+                prepend-icon="mdi-lock"
+                type="password"
+                v-model="login.password"
+                label="Password"
+                outlined
+                :error-messages="passwordErrors"
+                @input="$v.login.password.$touch()"
+                @blur="$v.login.password.$touch()"
+              />
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn @click="userLogin">Login</v-btn>
+              </v-card-actions>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>

@@ -144,9 +144,9 @@ export default {
         id: uuidv4(),
         tagId: this.teamMember.tag.value,
         userId: this.teamMember.user.value,
-        Tag: {
+        tag: {
           id: this.teamMember.tag.value,
-          name: this.teamMember.user.text,
+          label: this.teamMember.tag.text,
         },
         userFullName: this.teamMember.user.text,
       };
@@ -160,9 +160,9 @@ export default {
     },
     loadTeamMemberRoles() {
       return this.$axios
-        .get("/api/v1/tags/for-select/project-role-tags")
+        .$get("/api/v1/tags/for-select/project-role-tags")
         .then((r) => {
-          this.teamMemberRoles = r.data.items.map((i) => {
+          this.teamMemberRoles = r.items.map((i) => {
             return {
               id: null,
               value: i.id,
@@ -172,8 +172,8 @@ export default {
         });
     },
     loadUsers() {
-      return this.$axios.get("/api/v1/users/for-select").then((r) => {
-        this.users = r.data.items.map((i) => {
+      return this.$axios.$get("/api/v1/users/for-select").then((r) => {
+        this.users = r.items.map((i) => {
           return {
             id: null,
             value: i.id,

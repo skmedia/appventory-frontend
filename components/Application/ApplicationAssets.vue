@@ -86,9 +86,11 @@
               </v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-icon>
+              <!--
               <v-btn @click="editAsset(f.id)" x-small icon>
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
+              -->
               <v-btn @click="removeAsset(f.id)" x-small icon>
                 <v-icon>mdi-delete</v-icon>
               </v-btn>

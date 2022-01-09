@@ -2,7 +2,11 @@
   <div>
     <v-card>
       <PageHeader title="Recent applications">
-        <v-btn class="ml-auto" elevation="2" :to="'applications'">
+        <v-btn
+          class="ml-auto blue lighten-1"
+          elevation="2"
+          :to="'applications'"
+        >
           Show all
         </v-btn>
       </PageHeader>

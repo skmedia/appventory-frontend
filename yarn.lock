@@ -1620,6 +1620,16 @@
   optionalDependencies:
     "prettier" "^1.18.2 || ^2.0.0"
 
+"@vuejs-community/vue-filter-date-format@^1.6.3":
+  "integrity" "sha512-fUjAAI/1qzJPR6AYoK00TBA6/aRYKTXjLY/rSYsWV4G5nwywKfrpOYOJi5exWyzozohyV6nrzliDlWcl32+IPg=="
+  "resolved" "https://registry.npmjs.org/@vuejs-community/vue-filter-date-format/-/vue-filter-date-format-1.6.3.tgz"
+  "version" "1.6.3"
+
+"@vuejs-community/vue-filter-date-parse@^1.1.6":
+  "integrity" "sha512-OzeiL5wrq+5+sw9hJfcfaIxcG953lpe37Lf0JnRKzVvfBRTHX2t8SIVxtDmgLhSGoGx9B4bGbpv4NaIqeEofXA=="
+  "resolved" "https://registry.npmjs.org/@vuejs-community/vue-filter-date-parse/-/vue-filter-date-parse-1.1.6.tgz"
+  "version" "1.1.6"
+
 "@webassemblyjs/ast@1.9.0":
   "integrity" "sha512-C6wW5L+b7ogSDVqymbkkvuW9kruN//YisMED04xzeBBqjHa2FYnmvOlS6Xj68xWQRgWvI9cIglsjFowH/RJyEA=="
   "resolved" "https://registry.npmjs.org/@webassemblyjs/ast/-/ast-1.9.0.tgz"

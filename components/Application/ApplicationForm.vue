@@ -55,6 +55,7 @@
         </v-row>
         <v-row>
           <v-col>
+            {{ searchValue }}
             <v-autocomplete
               v-model="application.tags"
               outlined

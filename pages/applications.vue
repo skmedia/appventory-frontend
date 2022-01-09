@@ -31,6 +31,10 @@
           :loading="loading"
           :search="search"
         >
+          <template #item.createdAt="{ item }">
+            {{ item.createdAt | dateParse() | dateFormat("DD/MM/YYYY") }}
+          </template>
+
           <template #item.actions="{ item }">
             <v-icon small class="mr-2" z @click="editItem(item)">
               mdi-pencil
@@ -99,6 +103,12 @@ export default {
           align: "start",
           sortable: false,
           value: "description",
+        },
+        {
+          text: "Created",
+          align: "start",
+          sortable: true,
+          value: "createdAt",
         },
         {
           text: "Actions",

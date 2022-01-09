@@ -12,7 +12,7 @@ export default $axios => ({
         return {
           ...i,
           tags: i.tags.map(t => ({
-            ...t.Tag,
+            ...t.tag,
           }))
         }
       })

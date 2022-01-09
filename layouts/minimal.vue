@@ -1,10 +1,8 @@
 <template>
   <v-app>
     <v-main>
-      <v-container>
-        <Nuxt />
-        <Notification ref="notification" />
-      </v-container>
+      <Nuxt />
+      <Notification ref="notification" />
     </v-main>
   </v-app>
 </template>

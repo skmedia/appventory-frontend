@@ -3,8 +3,8 @@ import fs from 'fs'
 
 export default {
   server: {
-    port: 3005,
-    https: {
+    port: process.env.PORT || 3005,
+    https: process.env.PORT ? null : {
       key: fs.readFileSync(path.resolve(__dirname, 'keys/key.pem')),
       cert: fs.readFileSync(path.resolve(__dirname, 'keys/cert.pem'))
     }
@@ -62,7 +62,7 @@ export default {
   },
 
   axios: {
-    proxy: true
+    proxy: process.env.PORT ? false : true
   },
 
   proxy: {
@@ -76,7 +76,7 @@ export default {
   auth: {
     redirect: {
       login: '/login',
-      logout: '/',
+      logout: '/login',
       callback: '/login',
       home: '/'
     },

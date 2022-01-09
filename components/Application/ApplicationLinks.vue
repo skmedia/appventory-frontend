@@ -5,7 +5,7 @@
       <v-row>
         <v-col>
           <v-combobox
-            v-model="link.Tag"
+            v-model="link.tag"
             return-object
             label="Link type"
             hint="Select link type"
@@ -22,7 +22,7 @@
           <v-text-field
             v-model="link.url"
             outlined
-            label="Link"
+            label="Url"
             dense
             :error-messages="urlErrors"
             @input="$v.link.url.$touch()"

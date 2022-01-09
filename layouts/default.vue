@@ -9,8 +9,12 @@
     >
       <v-list-item class="blue">
         <v-list-item-content>
-          <v-list-item-title class="text-h6"> AppVento </v-list-item-title>
-          <v-list-item-subtitle>Application Repository</v-list-item-subtitle>
+          <v-list-item-title>
+            <v-layout align-center justify-center>
+              <v-subheader class="text-h3 text-overline">AppVento</v-subheader>
+              <v-icon>mdi-domain</v-icon>
+            </v-layout>
+          </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
       <v-divider />
@@ -44,7 +48,7 @@
               <v-btn x-small @click="toggleSettings()">
                 <v-icon x-small class="mr-1"> mdi-cogs </v-icon>Settings
               </v-btn>
-              <v-btn x-small @click="$auth.logout()">
+              <v-btn x-small @click.prevent="logout()">
                 <v-icon x-small class="mr-1"> mdi-logout </v-icon>Logout
               </v-btn>
             </v-list-item-subtitle>
@@ -56,7 +60,10 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
 
       <div v-if="!drawer">
-        <v-subheader> AppVento application inventory </v-subheader>
+        <v-layout align-center justify-center>
+          <v-subheader class="text-h3 text-overline">AppVento</v-subheader>
+          <v-icon>mdi-domain</v-icon>
+        </v-layout>
       </div>
 
       <!--
@@ -75,16 +82,31 @@
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
-      <v-menu left bottom>
+      <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" v-on="on">
-            <v-icon>mdi-dots-vertical</v-icon>
+            <v-avatar size="36">
+              <v-img src="https://cdn.vuetifyjs.com/images/lists/2.jpg" />
+            </v-avatar>
           </v-btn>
         </template>
-
         <v-list>
-          <v-list-item v-for="n in 5" :key="n" @click="() => {}">
-            <v-list-item-title>Option {{ n }}</v-list-item-title>
+          <v-list-item @click="toggleSettings()">
+            <v-list-item-action>
+              <v-icon>mdi-cogs</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title v-text="'Settings'" />
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item @click="$auth.logout()">
+            <v-list-item-action>
+              <v-icon>mdi-logout</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title v-text="'Logout'" />
+            </v-list-item-content>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -161,6 +183,9 @@ export default {
     ...mapMutations({
       toggleSettings: "settings/toggleSettings",
     }),
+    async logout() {
+      await $auth.logout();
+    },
   },
 };
 </script>
