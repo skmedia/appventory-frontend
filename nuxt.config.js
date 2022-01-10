@@ -61,12 +61,12 @@ export default {
   },
 
   axios: {
-    proxy: process.env.PORT ? false : true
+    proxy: true
   },
 
   proxy: {
     '/api/': {
-      target: 'https://localhost:3000',
+      target: process.env.PROXY ? process.env.PROXY : 'https://localhost:3000',
       pathRewrite: { '^/api/': '' },
       secure: false
     }
