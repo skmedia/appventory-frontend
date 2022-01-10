@@ -81,9 +81,7 @@ export default {
       },
     },
   },
-  created() {
-    console.log(this.$auth);
-  },
+  created() {},
   methods: {
     async userLogin() {
       try {
