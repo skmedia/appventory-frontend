@@ -3,7 +3,7 @@
     <v-layout justify-center>
       <v-flex xs12 sm8 md6>
         <v-layout align-center justify-center class="ma-10">
-          <v-subheader class="text-h3 text-overline">AppVento</v-subheader>
+          <v-subheader class="text-h3 text-overline">AppVentory</v-subheader>
           <v-icon x-large>mdi-domain</v-icon>
         </v-layout>
         <v-card tile class="elevation-12">
