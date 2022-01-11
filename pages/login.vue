@@ -51,8 +51,8 @@ export default {
   data() {
     return {
       login: {
-        email: "john.doe@example.com",
-        password: "john.doe@example.com",
+        email: "",
+        password: "",
       },
     };
   },
