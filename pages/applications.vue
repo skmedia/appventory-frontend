@@ -173,6 +173,7 @@ export default {
       newFiles,
       filesToDelete,
       isNewApplication,
+      closeModal,
     }) {
       const params = application;
       let filesToAdd = [];
@@ -195,60 +196,47 @@ export default {
         filesToAdd = fileUploadResponse.data.fileList;
       }
 
-      let result;
-      if (isNewApplication) {
-        result = this.$axios
-          .post("/api/v1/applications", {
+      try {
+        if (isNewApplication) {
+          await this.$axios.post("/api/v1/applications", {
             ...application,
             filesToAdd,
-          })
-          .then((r) => {
-            this.getDataFromApi();
-            this.hideApplicationForm();
-            return {};
-          })
-          .catch((e) => {
-            console.error("save application error: ", e);
           });
-      } else {
-        result = this.$axios
-          .put(`/api/v1/applications/${application.id}`, {
+        } else {
+          await this.$axios.put(`/api/v1/applications/${application.id}`, {
             ...application,
             filesToAdd,
             filesToDelete,
-          })
-          .then((r) => {
-            this.getDataFromApi();
-            this.hideApplicationForm();
-            return {};
-          })
-          .catch((e) => {
-            console.error("update application error: ", e);
           });
-      }
+        }
 
-      result
-        .catch((e) => {
-          this.$root.notification.show({
-            message: "An error occurred",
-            color: "red",
-          });
-        })
-        .then(() => {
-          this.$root.notification.show({ message: "Application saved" });
+        this.getDataFromApi();
+        if (closeModal) {
+          this.hideApplicationForm();
+        }
+        this.$root.notification.show({ message: "Application saved" });
+      } catch (e) {
+        console.error("update application error: ", e);
+        this.$root.notification.show({
+          message: "An error occurred",
+          color: "red",
         });
+      }
     },
     async loadData() {
       const params = {
         ...this.options,
         search: this.search,
       };
-      return this.$axios.$get("/api/v1/applications", params).then((r) => {
-        return {
-          items: r.items,
-          total: r.meta.count,
-        };
-      });
+      console.log(params);
+      return this.$axios
+        .$get("/api/v1/applications", { params: params })
+        .then((r) => {
+          return {
+            items: r.items,
+            total: r.meta.count,
+          };
+        });
     },
   },
 };

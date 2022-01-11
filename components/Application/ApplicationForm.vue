@@ -44,6 +44,7 @@
         <v-row>
           <v-col>
             <v-textarea
+              counter
               v-model="application.description"
               label="Description"
               hint="Application description, what does it do?"
@@ -98,6 +99,12 @@
 
         <v-row>
           <v-col>
+            <ApplicationNotes v-model="application.notes" />
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col>
             <small>* indicates required field</small>
           </v-col>
         </v-row>
@@ -107,6 +114,9 @@
         <v-spacer />
         <v-btn color="blue darken-1" text @click="hide()"> Close </v-btn>
         <v-btn color="blue darken-1" text @click="save()"> Save </v-btn>
+        <v-btn color="blue darken-1" text @click="save(false)">
+          Save and continue</v-btn
+        >
       </v-card-actions>
 
       <!--
@@ -123,7 +133,7 @@
 
 <script>
 import { v4 as uuidv4 } from "uuid";
-import { required } from "vuelidate/lib/validators";
+import { required, maxLength } from "vuelidate/lib/validators";
 
 const createApplication = ({
   id = uuidv4(),
@@ -131,6 +141,7 @@ const createApplication = ({
   description = "",
   tags = [],
   links = [],
+  notes = [],
   teamMembers = [],
   assets = [],
   client = null,
@@ -140,6 +151,7 @@ const createApplication = ({
   description,
   tags,
   links,
+  notes,
   teamMembers,
   assets,
   client,
@@ -162,6 +174,7 @@ export default {
     application: {
       name: { required },
       client: { required },
+      description: { maxLength: maxLength(500) },
     },
   },
   data: function () {
@@ -186,6 +199,14 @@ export default {
       if (!this.$v.application.client.$dirty) return errors;
       !this.$v.application.client.required &&
         errors.push("Client is required.");
+      return errors;
+    },
+
+    descriptionErrors() {
+      const errors = [];
+      if (!this.$v.application.description.$dirty) return errors;
+      !this.$v.application.description.maxLength &&
+        errors.push("Description is too long (max 500).");
       return errors;
     },
   },
@@ -221,17 +242,17 @@ export default {
     hide() {
       this.$emit("hide-form");
     },
-    save() {
+    save(closeModal = true) {
       this.$v.$touch();
       if (this.$v.$invalid) {
         this.$uiHelper.scrollTo("dialog-header");
         return;
       }
-
       this.$emit("save-application", {
         application: this.application,
         newFiles: this.filesToUpload,
         isNewApplication: this.isNewApplication,
+        closeModal,
       });
     },
     loadApplication() {
