@@ -11,7 +11,9 @@
         <v-list-item-content>
           <v-list-item-title>
             <v-layout align-center justify-center>
-              <v-subheader class="text-h3 text-overline">AppVento</v-subheader>
+              <v-subheader class="text-h3 text-overline"
+                >AppVentory</v-subheader
+              >
               <v-icon>mdi-domain</v-icon>
             </v-layout>
           </v-list-item-title>
@@ -63,7 +65,7 @@
 
       <div v-if="!drawer">
         <v-layout align-center justify-center>
-          <v-subheader class="text-h3 text-overline">AppVento</v-subheader>
+          <v-subheader class="text-h3 text-overline">AppVentory</v-subheader>
           <v-icon>mdi-domain</v-icon>
         </v-layout>
       </div>
