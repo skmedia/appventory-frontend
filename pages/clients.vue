@@ -84,6 +84,12 @@ export default {
           value: "name",
         },
         {
+          text: "Applications",
+          align: "start",
+          sortable: true,
+          value: "applications.length",
+        },
+        {
           text: "Actions",
           value: "actions",
           sortable: false,
