@@ -57,8 +57,14 @@ export default {
   ],
 
   router: {
-    middleware: ['auth']
+    middleware: [
+      'auth',
+    ]
   },
+
+  serverMiddleware: [
+    'redirect-ssl'
+  ],
 
   axios: {
     proxy: true
