@@ -36,11 +36,11 @@
           </template>
 
           <template #item.actions="{ item }">
-            <v-btn small icon @click="editItem(item)">
+            <v-btn fab small icon @click="editItem(item)">
               <v-icon small> mdi-pencil </v-icon>
             </v-btn>
-            <v-btn small icon @click="editItem(item)">
-              <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+            <v-btn fab small icon @click="deleteItem(item)">
+              <v-icon small> mdi-delete </v-icon>
             </v-btn>
           </template>
           <template #no-data>
@@ -230,7 +230,6 @@ export default {
         ...this.options,
         search: this.search,
       };
-      console.log(params);
       return this.$axios
         .$get("/api/v1/applications", { params: params })
         .then((r) => {

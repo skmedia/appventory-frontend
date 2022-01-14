@@ -5,8 +5,8 @@ export default {
   server: {
     port: process.env.PORT || 3005,
     https: process.env.PORT ? null : {
-      key: fs.readFileSync(path.resolve(__dirname, 'keys/key.pem')),
-      cert: fs.readFileSync(path.resolve(__dirname, 'keys/cert.pem'))
+      key: fs.readFileSync(path.resolve(__dirname, 'keys/localhost-key.pem')),
+      cert: fs.readFileSync(path.resolve(__dirname, 'keys/localhost.pem'))
     }
   },
 

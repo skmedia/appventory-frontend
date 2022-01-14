@@ -64,16 +64,24 @@
       <v-list dense>
         <template v-for="(f, index) in applicationAssets">
           <v-list-item class="my-0 py-0">
-            <v-list-item-icon>
-              <v-icon color="grey"> mdi-attachment </v-icon>
-            </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>
-                <a :href="'/api/v1/assets/download/' + f.id">
+                <v-btn
+                  class="auto-height"
+                  :loading="downloadingFile === f.id"
+                  :disabled="downloadingFile === f.id"
+                  @click.prevent="download(f)"
+                >
+                  <v-icon left> mdi-cloud-download </v-icon>
                   {{ f.filename }}
-                </a>
+                  <template v-slot:loader>
+                    <span class="custom-loader">
+                      <v-icon dark> mdi-cached </v-icon>
+                    </span>
+                  </template>
+                </v-btn>
               </v-list-item-title>
-              <v-list-item-subtitle v-if="f.description">
+              <v-list-item-subtitle class="mt-2" v-if="f.description">
                 {{ f.description }}
                 <v-text-field
                   v-model="f.description"
@@ -86,13 +94,13 @@
               </v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-icon>
-              <!--
-              <v-btn @click="editAsset(f.id)" x-small icon>
-                <v-icon>mdi-pencil</v-icon>
+              <v-btn small fab @click="editAsset(f.id)" x-small icon>
+                <v-icon small>mdi-pencil</v-icon>
               </v-btn>
-              -->
-              <v-btn @click="removeAsset(f.id)" x-small icon>
-                <v-icon>mdi-delete</v-icon>
+            </v-list-item-icon>
+            <v-list-item-icon>
+              <v-btn small fab @click="removeAsset(f.id)" x-small icon>
+                <v-icon small>mdi-delete</v-icon>
               </v-btn>
             </v-list-item-icon>
           </v-list-item>
@@ -106,6 +114,7 @@
 
 <script>
 import { sortBy } from "lodash";
+import { saveAs } from "file-saver";
 
 export default {
   props: {
@@ -116,6 +125,7 @@ export default {
   },
   data: function () {
     return {
+      downloadingFile: null,
       selectedFiles: [],
       filesToUpload: [],
     };
@@ -141,6 +151,17 @@ export default {
     this.filesToUpload = [];
   },
   methods: {
+    download(f) {
+      this.downloadingFile = f.id;
+      this.$axios
+        .$get(`/api/v1/assets/download/${f.id}`, { responseType: "blob" })
+        .then((response) => {
+          saveAs(response, f.filename);
+        })
+        .finally(() => {
+          this.downloadingFile = null;
+        });
+    },
     addFileToUpload(files) {
       this.$nextTick(() => {
         this.selectedFiles = [];

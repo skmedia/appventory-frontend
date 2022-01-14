@@ -25,8 +25,8 @@
               append-icon="mdi-magnify"
               hide-details
             ></v-text-field>
-            <div class="ml-auto">
-              <v-btn outlined icon @click="getDataFromApi">
+            <div class="ml-auto align-self-center">
+              <v-btn small icon @click="getDataFromApi">
                 <v-icon>mdi-refresh</v-icon>
               </v-btn>
             </div>
