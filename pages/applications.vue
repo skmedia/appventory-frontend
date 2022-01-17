@@ -36,10 +36,10 @@
           </template>
 
           <template #item.actions="{ item }">
-            <v-btn fab small icon @click="editItem(item)">
+            <v-btn small icon @click="editItem(item)">
               <v-icon small> mdi-pencil </v-icon>
             </v-btn>
-            <v-btn fab small icon @click="deleteItem(item)">
+            <v-btn small icon @click="deleteItem(item)">
               <v-icon small> mdi-delete </v-icon>
             </v-btn>
           </template>

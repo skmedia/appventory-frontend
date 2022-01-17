@@ -9,33 +9,34 @@
         <v-card tile class="elevation-12">
           <PageHeader class="mb-4" title="Login"> </PageHeader>
           <v-card-text>
-            <v-form>
-              <v-text-field
-                prepend-icon="mdi-account"
-                type="email"
-                v-model="login.email"
-                label="Email"
-                outlined
-                :error-messages="emailErrors"
-                @input="$v.login.email.$touch()"
-                @blur="$v.login.email.$touch()"
-              />
+            <v-text-field
+              type="email"
+              v-model="login.email"
+              label="Email"
+              outlined
+              :error-messages="emailErrors"
+              @input="$v.login.email.$touch()"
+              @blur="$v.login.email.$touch()"
+            />
 
-              <v-text-field
-                prepend-icon="mdi-lock"
-                type="password"
-                v-model="login.password"
-                label="Password"
-                outlined
-                :error-messages="passwordErrors"
-                @input="$v.login.password.$touch()"
-                @blur="$v.login.password.$touch()"
-              />
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn @click="userLogin">Login</v-btn>
-              </v-card-actions>
-            </v-form>
+            <v-text-field
+              type="password"
+              v-model="login.password"
+              label="Password"
+              outlined
+              :error-messages="passwordErrors"
+              @input="$v.login.password.$touch()"
+              @blur="$v.login.password.$touch()"
+            />
+
+            <v-btn class="grey darken-2" block @click="userLogin">Login</v-btn>
+          </v-card-text>
+
+          <v-card-text class="d-flex">
+            <a href="/signup" class="grey--text">Forgot password</a>
+            <a class="grey--text ml-auto" href="/signup">
+              No account yet? Sign up!
+            </a>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -84,6 +85,10 @@ export default {
   created() {},
   methods: {
     async userLogin() {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
       try {
         let response = await this.$auth.loginWith("local", {
           data: this.login,

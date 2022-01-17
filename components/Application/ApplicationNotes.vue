@@ -33,12 +33,8 @@
           ></v-textarea>
         </v-col>
         <v-col cols="2">
-          <v-btn small primary v-if="note.id" @click="update" icon>
-            <v-icon>mdi-content-save</v-icon>
-          </v-btn>
-          <v-btn small primary v-if="!note.id" @click="add" icon>
-            <v-icon>mdi-content-save</v-icon>
-          </v-btn>
+          <v-btn v-if="note.id" @click="update" outlined> Save </v-btn>
+          <v-btn v-if="!note.id" @click="add" outlined>Add</v-btn>
           <v-btn small secondary @click="reset()" icon>
             <v-icon>mdi-reload</v-icon>
           </v-btn>
@@ -65,12 +61,12 @@
             </v-list-item-content>
 
             <v-list-item-icon>
-              <v-btn fab @click="load(note)" x-small icon>
+              <v-btn @click="load(note)" x-small icon>
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
             </v-list-item-icon>
             <v-list-item-icon>
-              <v-btn fab @click="remove(note.id)" x-small icon>
+              <v-btn @click="remove(note.id)" x-small icon>
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </v-list-item-icon>

@@ -87,6 +87,7 @@ import ManageTagTypes from "../../components/TagManagement/ManageTagTypes.vue";
 let apiSearch;
 
 export default {
+  components: [TagForm, ManageTagTypes],
   data() {
     return {
       selectedTag: {},

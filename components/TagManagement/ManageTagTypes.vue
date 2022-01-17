@@ -75,6 +75,7 @@ const createTagType = ({ id = null, label = "" } = {}) => ({
   label,
 });
 export default {
+  name: "ManageTagTypes",
   props: {
     show: {
       type: Boolean,

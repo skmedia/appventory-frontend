@@ -81,25 +81,45 @@
                   </template>
                 </v-btn>
               </v-list-item-title>
-              <v-list-item-subtitle class="mt-2" v-if="f.description">
+              <v-list-item-subtitle class="mt-2" v-show="f.description">
                 {{ f.description }}
+              </v-list-item-subtitle>
+              <div>
                 <v-text-field
-                  v-model="f.description"
+                  v-show="f.id === asset.id"
+                  v-model="asset.description"
+                  :ref="'desc_' + f.id"
                   class="mt-2"
                   dense
-                  hide-details
                   outlined
+                  counter
+                  :error-messages="descriptionErrors"
+                  @input="$v.asset.description.$touch()"
+                  @blur="$v.asset.description.$touch()"
+                  @keydown.enter="update()"
                 >
                 </v-text-field>
-              </v-list-item-subtitle>
+              </div>
             </v-list-item-content>
-            <v-list-item-icon>
-              <v-btn small fab @click="editAsset(f.id)" x-small icon>
+
+            <v-list-item-icon v-if="f.id == asset.id">
+              <v-btn small @click="update()" x-small icon>
+                <v-icon small>mdi-content-save</v-icon>
+              </v-btn>
+            </v-list-item-icon>
+            <v-list-item-icon v-if="f.id == asset.id">
+              <v-btn small @click="reset()" x-small icon>
+                <v-icon small>mdi-reload</v-icon>
+              </v-btn>
+            </v-list-item-icon>
+
+            <v-list-item-icon v-if="f.id !== asset.id">
+              <v-btn small @click="load(f)" x-small icon>
                 <v-icon small>mdi-pencil</v-icon>
               </v-btn>
             </v-list-item-icon>
-            <v-list-item-icon>
-              <v-btn small fab @click="removeAsset(f.id)" x-small icon>
+            <v-list-item-icon v-if="f.id !== asset.id">
+              <v-btn small @click="removeAsset(f.id)" x-small icon>
                 <v-icon small>mdi-delete</v-icon>
               </v-btn>
             </v-list-item-icon>
@@ -115,6 +135,12 @@
 <script>
 import { sortBy } from "lodash";
 import { saveAs } from "file-saver";
+import { maxLength } from "vuelidate/lib/validators";
+
+const create = ({ id = null, description = "" } = {}) => ({
+  id,
+  description,
+});
 
 export default {
   props: {
@@ -125,10 +151,18 @@ export default {
   },
   data: function () {
     return {
+      asset: create(),
       downloadingFile: null,
       selectedFiles: [],
       filesToUpload: [],
     };
+  },
+  validations: {
+    asset: {
+      description: {
+        maxLength: maxLength(200),
+      },
+    },
   },
   computed: {
     applicationAssets: {
@@ -138,6 +172,13 @@ export default {
       set(value) {
         this.$emit("input", value);
       },
+    },
+    descriptionErrors() {
+      const errors = [];
+      if (!this.$v.asset.description.$dirty) return errors;
+      !this.$v.asset.description.maxLength &&
+        errors.push("Description is too long (max 200).");
+      return errors;
     },
   },
   watch: {
@@ -188,6 +229,35 @@ export default {
       this.applicationAssets = this.applicationAssets.filter(
         (i) => i.id !== id
       );
+    },
+    load(item) {
+      Object.assign(this.asset, item);
+      this.$nextTick(() => {
+        setTimeout(() => {
+          const ref = this.$refs["desc_" + item.id];
+          ref && ref[0].$refs.input.focus();
+        });
+      });
+    },
+    reset() {
+      this.asset = create();
+      this.$v.$reset();
+    },
+    update() {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
+
+      const idx = this.applicationAssets.findIndex(
+        ({ id }) => id === this.asset.id
+      );
+
+      if (idx !== -1) {
+        this.applicationAssets[idx] = this.asset;
+        this.applicationAssets = this.applicationAssets;
+        this.asset = create();
+      }
     },
   },
 };
