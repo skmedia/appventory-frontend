@@ -36,8 +36,8 @@
                 <v-col cols="6" class="pt-2">
                   <v-text-field
                     v-model="account.firstName"
-                    label="Firstname"
-                    hint="firstname of the user"
+                    label="First name"
+                    hint="Your first name"
                     persistent-hint
                     outlined
                     :error-messages="firstNameErrors"
@@ -48,8 +48,8 @@
                 <v-col cols="6" class="pt-2">
                   <v-text-field
                     v-model="account.lastName"
-                    label="Lastname"
-                    hint="lastname of the user"
+                    label="Last name"
+                    hint="Your last name"
                     persistent-hint
                     outlined
                     :error-messages="lastNameErrors"
@@ -177,14 +177,14 @@ export default {
       const errors = [];
       if (!this.$v.account.firstName.$dirty) return errors;
       !this.$v.account.firstName.required &&
-        errors.push("Firstname is required.");
+        errors.push("First name is required.");
       return errors;
     },
     lastNameErrors() {
       const errors = [];
       if (!this.$v.account.lastName.$dirty) return errors;
       !this.$v.account.lastName.required &&
-        errors.push("Lastname is required.");
+        errors.push("Last name is required.");
       return errors;
     },
     emailErrors() {
@@ -196,10 +196,9 @@ export default {
     passwordErrors() {
       const errors = [];
       if (!this.$v.account.password.$dirty) return errors;
-      !this.$v.account.password.required &&
-        errors.push("Password is required.");
+      !this.$v.account.password.required && errors.push("You need a password.");
       !this.$v.account.password.minLength &&
-        errors.push("Password is too short.");
+        errors.push("Password is too short, at least 6 chars please.");
       !this.$v.account.password.strongPassword &&
         errors.push("Password is too weak.");
       return errors;
@@ -208,7 +207,7 @@ export default {
       const errors = [];
       if (!this.$v.account.passwordConfirm.$dirty) return errors;
       !this.$v.account.passwordConfirm.required &&
-        errors.push("Confirm password is required.");
+        errors.push("Please confirm your password.");
       !this.$v.account.passwordConfirm.sameAsPassword &&
         errors.push("Please confirm your password");
       return errors;

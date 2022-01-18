@@ -1,7 +1,7 @@
 <template>
   <v-container fluid fill-height>
     <v-layout justify-center>
-      <v-flex xs12 sm8 md6>
+      <v-flex xs12 sm8 md4>
         <v-layout align-center justify-center class="ma-10">
           <v-subheader class="text-h3 text-overline">AppVentory</v-subheader>
           <v-icon x-large>mdi-domain</v-icon>
