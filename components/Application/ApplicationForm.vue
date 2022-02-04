@@ -56,22 +56,9 @@
         </v-row>
         <v-row>
           <v-col>
-            <v-autocomplete
-              v-model="application.tags"
-              outlined
-              :items="tags"
-              item-value="id"
-              item-text="label"
-              chips
-              label="Tags"
-              persistent-placeholder
-              deletable-chips
+            <ApplicationTags
               hint="List of tags associated with this application"
-              persistent-hint
-              return-object
-              multiple
-              solo
-              flat
+              v-model="application.tags"
             />
           </v-col>
         </v-row>
@@ -182,7 +169,6 @@ export default {
       isNewApplication: true,
       application: this.app,
       showDialog: this.show,
-      tags: [],
       clients: [],
       filesToUpload: [],
     };
@@ -235,7 +221,6 @@ export default {
     },
   },
   created() {
-    this.loadTags();
     this.loadClients();
   },
   methods: {
@@ -267,13 +252,6 @@ export default {
       this.application.tags = this.application.tags.filter(
         (i) => i.value !== item.value
       );
-    },
-    loadTags() {
-      return this.$axios
-        .$get("/api/v1/tags/for-select/application-tags")
-        .then((r) => {
-          this.tags = r.items;
-        });
     },
     loadClients() {
       return this.$axios.$get("/api/v1/clients/for-select").then((r) => {

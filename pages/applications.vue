@@ -11,15 +11,14 @@
         </v-btn>
       </PageHeader>
 
-      <v-card-text>
+      <v-card-text class="d-flex">
         <v-text-field
-          v-model="search"
+          v-model="filter.search"
           append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
+          label="Search application or client"
           outlined
         />
+        <ApplicationTags class="ml-4" v-model="filter.tags"></ApplicationTags>
       </v-card-text>
 
       <v-card-text>
@@ -29,7 +28,6 @@
           :options.sync="options"
           :server-items-length="total"
           :loading="loading"
-          :search="search"
         >
           <template #item.createdAt="{ item }">
             {{ item.createdAt | dateParse() | dateFormat("DD/MM/YYYY") }}
@@ -82,7 +80,10 @@ export default {
       activeApplication: {},
       showApplicationForm: false,
       total: 0,
-      search: "",
+      filter: {
+        search: "",
+        tags: null,
+      },
       items: [],
       loading: true,
       pageCount: 0,
@@ -128,7 +129,7 @@ export default {
       },
       deep: true,
     },
-    search: {
+    filter: {
       handler() {
         apiSearch();
       },
@@ -226,9 +227,11 @@ export default {
       }
     },
     async loadData() {
+      console.log(this.filter);
       const params = {
         ...this.options,
-        search: this.search,
+        search: this.filter.search,
+        tags: this.filter.tags?.map(({ id }) => id),
       };
       return this.$axios
         .$get("/api/v1/applications", { params: params })
