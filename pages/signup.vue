@@ -7,15 +7,22 @@
           <v-icon x-large>mdi-domain</v-icon>
         </v-layout>
 
-        <v-card tile class="elevation-12">
-          <PageHeader class="mb-4" title="Signup"> </PageHeader>
-          <v-card-text v-if="msg">
+        <v-card class="elevation-12" v-if="msg">
+          <v-card-text>
             <v-alert type="success">
               {{ msg }}
             </v-alert>
           </v-card-text>
+          <v-card-text class="d-flex">
+            <a class="grey--text" href="/login">
+              Already have an account? Login!
+            </a>
+          </v-card-text>
+        </v-card>
 
-          <template v-else>
+        <v-card tile class="elevation-12" v-else>
+          <PageHeader class="mb-4" title="Signup"> </PageHeader>
+          <template>
             <v-card-text v-if="errors.length">
               <ErrorList :errors="errors" />
             </v-card-text>
