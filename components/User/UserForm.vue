@@ -73,11 +73,13 @@ const createUser = ({
   firstName = "",
   lastName = "",
   email = "",
+  role = "user",
 } = {}) => ({
   id,
   firstName,
   lastName,
   email,
+  role,
 });
 
 export default {
