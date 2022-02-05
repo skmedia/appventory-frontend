@@ -7,11 +7,13 @@
       fixed
       app
     >
-      <v-list-item class="blue darken-2" style="height: 64px">
+      <v-list-item class="blue" style="height: 64px">
         <v-list-item-content>
           <v-list-item-title>
             <v-layout align-center justify-center>
-              <div class="text-h3 text-overline">AppVentory</div>
+              <v-subheader class="text-h3 text--white text-overline">
+                AppVentory
+              </v-subheader>
               <v-icon>mdi-domain</v-icon>
             </v-layout>
           </v-list-item-title>
@@ -123,7 +125,7 @@
     </v-app-bar>
 
     <v-main class="pb-4">
-      <v-container class="pa-8">
+      <v-container fluid class="pa-8">
         <Nuxt />
         <Settings />
         <Notification ref="notification" />

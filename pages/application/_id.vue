@@ -1,17 +1,17 @@
 <template>
   <v-card v-if="!$fetchState.pending">
     <PageHeader :title="app.name">
-      <v-btn small class="ml-auto secondary darken-1" elevation="2">
+      <v-btn small class="secondary darken-1" elevation="2">
         Edit
         <v-icon right>mdi-pencil</v-icon>
       </v-btn>
-      <v-btn small class="ml-auto secondary darken-1" elevation="2">
+      <v-btn small class="ml-2 econdary darken-1" elevation="2">
         Delete <v-icon right>mdi-trash-can</v-icon>
       </v-btn>
     </PageHeader>
 
     <div class="pa-5">
-      <v-card-text class="px-0" v-if="app.description">
+      <v-card-text class="px-0" v-if="app.client">
         {{ app.client.name }}
       </v-card-text>
 
@@ -51,12 +51,15 @@
       >
         <v-list>
           <v-list-item :key="item.id" v-for="item in app.teamMembers">
+            <v-list-item-icon>
+              <v-icon color="grey"> mdi-badge-account </v-icon>
+            </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>
-                {{ item.tag.label }}
+                {{ item.userFullName }}
               </v-list-item-title>
               <v-list-item-subtitle>
-                {{ item.userFullName }}
+                {{ item.tag.label }}
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -66,12 +69,15 @@
       <v-card outlined class="mt-4" v-if="app.links && app.links.length">
         <v-list>
           <v-list-item :key="item.id" v-for="item in app.links">
+            <v-list-item-icon>
+              <v-icon color="grey"> mdi-link </v-icon>
+            </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>
                 {{ item.tag.label }}
               </v-list-item-title>
               <v-list-item-subtitle>
-                <a :href="item.url"> {{ item.url }}</a>
+                <a target="_blank" :href="item.url"> {{ item.url }}</a>
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -95,7 +101,7 @@
                       | dateFormat("DD/MM/YYYY HH:mm:ss")
                   }}
                 </div>
-                <div>{{ note.text }}</div>
+                <div style="white-space: pre">{{ note.text }}</div>
               </div>
             </v-timeline-item>
           </v-timeline>

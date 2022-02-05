@@ -1,12 +1,14 @@
 <template>
-  <div class="d-flex px-8 py-4 secondary">
+  <v-row no-gutters class="d-flex px-8 py-4 secondary">
     <slot name="title">
-      <span class="text-h5 align-self-center">{{ title }}</span>
+      <v-col cols="12" md="8" class="align-self-center text-h5">{{
+        title
+      }}</v-col>
     </slot>
-    <div class="ml-auto">
+    <v-col class="mt-2 mt-md-0 text-md-right text-left">
       <slot></slot>
-    </div>
-  </div>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
