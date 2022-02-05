@@ -3,7 +3,7 @@
     <v-card>
       <PageHeader title="Recent applications">
         <v-btn
-          class="ml-auto blue lighten-1"
+          class="ml-auto secondary darken-1"
           elevation="2"
           :to="'applications'"
         >

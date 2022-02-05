@@ -3,7 +3,7 @@
     <v-card>
       <PageHeader title="Applications">
         <v-btn
-          class="ml-auto blue lighten-1"
+          class="ml-auto secondary darken-1"
           outlined
           @click="showApplicationForm = true"
         >
@@ -29,6 +29,16 @@
           :server-items-length="total"
           :loading="loading"
         >
+          <template #item.description="{ item }">
+            <span v-if="item.description">
+              {{
+                item.description.length > 50
+                  ? item.description.substr(0, 47) + "..."
+                  : item.description
+              }}
+            </span>
+          </template>
+
           <template #item.createdAt="{ item }">
             {{ item.createdAt | dateParse() | dateFormat("DD/MM/YYYY") }}
           </template>
@@ -37,6 +47,22 @@
             <v-btn small icon @click="editItem(item)">
               <v-icon small> mdi-pencil </v-icon>
             </v-btn>
+
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  small
+                  icon
+                  :to="'application/' + item.id"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon small> mdi-card-text </v-icon>
+                </v-btn>
+              </template>
+              <span>Application detail page</span>
+            </v-tooltip>
+
             <v-btn small icon @click="deleteItem(item)">
               <v-icon small> mdi-delete </v-icon>
             </v-btn>
@@ -219,7 +245,6 @@ export default {
         }
         this.$root.notification.show({ message: "Application saved" });
       } catch (e) {
-        console.error("update application error: ", e);
         this.$root.notification.show({
           message: "An error occurred",
           color: "red",
@@ -227,7 +252,6 @@ export default {
       }
     },
     async loadData() {
-      console.log(this.filter);
       const params = {
         ...this.options,
         search: this.filter.search,

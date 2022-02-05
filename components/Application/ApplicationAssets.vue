@@ -21,7 +21,7 @@
     <v-card outlined class="ma-4" v-if="filesToUpload.length">
       <v-card-subtitle>New files</v-card-subtitle>
       <v-divider></v-divider>
-      <v-list dense>
+      <v-list>
         <template v-for="(f, index) in filesToUpload">
           <v-list-item class="my-0 py-0">
             <v-list-item-icon>
@@ -33,7 +33,6 @@
                 <v-text-field
                   v-model="f.description"
                   class="mt-2"
-                  dense
                   label="Description"
                   hide-details=""
                   outlined
@@ -61,7 +60,7 @@
     >
       <v-card-subtitle>Files</v-card-subtitle>
       <v-divider></v-divider>
-      <v-list dense>
+      <v-list>
         <template v-for="(f, index) in applicationAssets">
           <v-list-item class="my-0 py-0">
             <v-list-item-content>
@@ -90,7 +89,6 @@
                   v-model="asset.description"
                   :ref="'desc_' + f.id"
                   class="mt-2"
-                  dense
                   outlined
                   counter
                   :error-messages="descriptionErrors"

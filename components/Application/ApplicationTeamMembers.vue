@@ -1,14 +1,13 @@
 <template>
   <v-card outlined>
     <v-card-title>Team members</v-card-title>
-    <div class="px-4">
+    <v-card outlined class="mx-4 pa-4">
       <v-row>
-        <v-col>
+        <v-col cols="12" md="5">
           <v-combobox
             v-model="teamMember.tag"
             return-object
             label="Role"
-            dense
             hint="Select a role"
             persistent-hint
             outlined
@@ -18,12 +17,11 @@
             @blur="$v.teamMember.tag.$touch()"
           ></v-combobox>
         </v-col>
-        <v-col>
+        <v-col cols="12" md="5">
           <v-combobox
             v-model="teamMember.user"
             return-object
             label="Team member"
-            dense
             outlined
             :items="users"
             :error-messages="memberUserErrors"
@@ -31,14 +29,14 @@
             @blur="$v.teamMember.user.$touch()"
           ></v-combobox>
         </v-col>
-        <v-col cols="2">
+        <v-col>
           <v-btn @click="addTeamMember" outlined>Add</v-btn>
         </v-col>
       </v-row>
-    </div>
+    </v-card>
 
     <v-card outlined class="ma-4" v-if="teamMembers.length">
-      <v-list dense>
+      <v-list>
         <template v-for="(teamMember, index) in teamMembers">
           <v-list-item>
             <v-list-item-icon>

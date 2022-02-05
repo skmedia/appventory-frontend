@@ -1,9 +1,9 @@
 <template>
   <v-card outlined>
     <v-card-title> Notes </v-card-title>
-    <div class="px-4">
+    <v-card outlined class="mx-4 pa-4">
       <v-row>
-        <v-col cols="2">
+        <v-col>
           <v-combobox
             v-model="note.tag"
             return-object
@@ -12,7 +12,6 @@
             persistent-hint
             item-text="label"
             item-key="id"
-            dense
             outlined
             :items="noteTypes"
             :error-messages="tagErrors"
@@ -20,30 +19,29 @@
             @blur="$v.note.tag.$touch()"
           ></v-combobox>
         </v-col>
-        <v-col>
+        <v-col cols="12" md="6">
           <v-textarea
             counter
             v-model="note.text"
             outlined
             label="Text"
-            dense
             :error-messages="textErrors"
             @input="$v.note.text.$touch()"
             @blur="$v.note.text.$touch()"
           ></v-textarea>
         </v-col>
-        <v-col cols="2">
+        <v-col cols="12" md="2">
           <v-btn v-if="note.id" @click="update" outlined> Save </v-btn>
           <v-btn v-if="!note.id" @click="add" outlined>Add</v-btn>
-          <v-btn small secondary @click="reset()" icon>
+          <v-btn v-if="note.id" small secondary @click="reset()" icon>
             <v-icon>mdi-reload</v-icon>
           </v-btn>
         </v-col>
       </v-row>
-    </div>
+    </v-card>
 
     <v-card outlined class="ma-4" v-if="applicationNotes.length">
-      <v-list dense>
+      <v-list>
         <template v-for="(note, index) in applicationNotes">
           <v-list-item>
             <v-list-item-icon>

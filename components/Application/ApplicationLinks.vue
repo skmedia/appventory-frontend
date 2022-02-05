@@ -1,16 +1,15 @@
 <template>
   <v-card outlined>
     <v-card-title>Links</v-card-title>
-    <div class="px-4">
+    <v-card outlined class="mx-4 pa-4">
       <v-row>
-        <v-col>
+        <v-col cols="12" md="5">
           <v-combobox
             v-model="link.tag"
             return-object
             label="Link type"
             hint="Select link type"
             persistent-hint
-            dense
             outlined
             :items="linkTypes"
             :error-messages="linkTagErrors"
@@ -18,25 +17,24 @@
             @blur="$v.link.tag.$touch()"
           ></v-combobox>
         </v-col>
-        <v-col>
+        <v-col cols="12" md="5">
           <v-text-field
             v-model="link.url"
             outlined
             label="Url"
-            dense
             :error-messages="urlErrors"
             @input="$v.link.url.$touch()"
             @blur="$v.link.url.$touch()"
           ></v-text-field>
         </v-col>
-        <v-col cols="2">
+        <v-col>
           <v-btn @click="addLink" outlined>Add</v-btn>
         </v-col>
       </v-row>
-    </div>
+    </v-card>
 
     <v-card outlined class="ma-4" v-if="applicationLinks.length">
-      <v-list dense>
+      <v-list>
         <template v-for="(link, index) in applicationLinks">
           <v-list-item>
             <v-list-item-icon>

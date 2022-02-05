@@ -7,13 +7,11 @@
       fixed
       app
     >
-      <v-list-item class="blue">
+      <v-list-item class="blue darken-2" style="height: 64px">
         <v-list-item-content>
           <v-list-item-title>
             <v-layout align-center justify-center>
-              <v-subheader class="text-h3 text-overline"
-                >AppVentory</v-subheader
-              >
+              <div class="text-h3 text-overline">AppVentory</div>
               <v-icon>mdi-domain</v-icon>
             </v-layout>
           </v-list-item-title>
@@ -60,7 +58,7 @@
       </template>
       -->
     </v-navigation-drawer>
-    <v-app-bar app flat>
+    <v-app-bar app flat class="blue">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
 
       <div v-if="!drawer">
@@ -79,7 +77,13 @@
       <v-spacer></v-spacer>
 
       <div class="mr-2" v-if="showSearch">
-        <v-text-field hide-details outlined dense single-line></v-text-field>
+        <v-text-field
+          class="white"
+          hide-details
+          outlined
+          dense
+          single-line
+        ></v-text-field>
       </div>
 
       <v-btn icon @click="showSearch = !showSearch">
@@ -89,7 +93,7 @@
       <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" v-on="on">
-            <v-avatar size="36" class="primary">
+            <v-avatar size="36" class="blue darken-2">
               {{ $auth.user.initials }}
             </v-avatar>
           </v-btn>
