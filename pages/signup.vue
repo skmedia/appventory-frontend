@@ -20,8 +20,8 @@
           </v-card-text>
         </v-card>
 
-        <v-card tile class="elevation-12" v-else>
-          <PageHeader class="mb-4" title="Signup"> </PageHeader>
+        <v-card tile class="elevation-12 rounded-lg pa-6" v-else>
+          <v-card-title class="text-h5">Signup</v-card-title>
           <template>
             <v-card-text v-if="errors.length">
               <ErrorList :errors="errors" />
@@ -105,7 +105,7 @@
               </v-row>
             </v-card-text>
             <v-card-text class="py-0">
-              <v-btn class="grey darken-2" block @click="signup"
+              <v-btn class="primary" block @click="signup"
                 >Create account</v-btn
               >
             </v-card-text>

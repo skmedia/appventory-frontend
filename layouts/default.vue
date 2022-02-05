@@ -123,7 +123,7 @@
     </v-app-bar>
 
     <v-main class="pb-4">
-      <v-container>
+      <v-container class="pa-8">
         <Nuxt />
         <Settings />
         <Notification ref="notification" />

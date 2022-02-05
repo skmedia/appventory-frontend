@@ -3,11 +3,11 @@
     <v-layout justify-center>
       <v-flex xs12 sm8 md4>
         <v-layout align-center justify-center class="ma-10">
-          <v-subheader class="text-h3 text-overline">AppVentory</v-subheader>
+          <v-subheader class="text-overline">AppVentory</v-subheader>
           <v-icon x-large>mdi-domain</v-icon>
         </v-layout>
-        <v-card tile class="elevation-12">
-          <PageHeader class="mb-4" title="Login"> </PageHeader>
+        <v-card tile class="elevation-12 rounded-lg pa-6">
+          <v-card-title class="text-h5">Login</v-card-title>
           <v-card-text>
             <v-text-field
               type="email"
@@ -29,7 +29,7 @@
               @blur="$v.login.password.$touch()"
             />
 
-            <v-btn class="grey darken-2" block @click="userLogin">Login</v-btn>
+            <v-btn class="primary" block @click="userLogin">Login</v-btn>
           </v-card-text>
 
           <v-card-text class="d-flex">
