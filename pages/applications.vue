@@ -11,15 +11,40 @@
         </v-btn>
       </PageHeader>
 
-      <v-card-text class="d-flex">
-        <v-text-field
-          v-model="filter.search"
-          append-icon="mdi-magnify"
-          label="Search application or client"
-          outlined
-        />
-        <ApplicationTags class="ml-4" v-model="filter.tags"></ApplicationTags>
-      </v-card-text>
+      <v-container fluid>
+        <v-row>
+          <v-col>
+            <v-text-field
+              v-model="filter.search"
+              append-icon="mdi-magnify"
+              label="Search application or client"
+              outlined
+            />
+          </v-col>
+          <v-col cols="6">
+            <div class="d-flex">
+              <ApplicationTags
+                label="Application tags"
+                class="ml-4"
+                v-model="filter.tags"
+              ></ApplicationTags>
+
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-checkbox
+                    v-bind="attrs"
+                    v-on="on"
+                    v-model="filter.allTags"
+                    class="ml-2"
+                    label="All"
+                  ></v-checkbox>
+                </template>
+                <span>Tooltip</span>
+              </v-tooltip>
+            </div>
+          </v-col>
+        </v-row>
+      </v-container>
 
       <v-card-text>
         <v-data-table

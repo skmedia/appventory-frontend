@@ -140,7 +140,7 @@ export default {
         id: uuidv4(),
         tag: {
           id: this.link.tag.value,
-          name: this.link.tag.text,
+          label: this.link.tag.text,
         },
         url: this.link.url,
       };

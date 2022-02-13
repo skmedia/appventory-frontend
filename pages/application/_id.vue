@@ -1,13 +1,36 @@
 <template>
   <v-card v-if="!$fetchState.pending">
     <PageHeader :title="app.name">
-      <v-btn small class="secondary darken-1" elevation="2">
-        Edit
-        <v-icon right>mdi-pencil</v-icon>
-      </v-btn>
-      <v-btn small class="ml-2 econdary darken-1" elevation="2">
-        Delete <v-icon right>mdi-trash-can</v-icon>
-      </v-btn>
+      <v-menu bottom left>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn icon v-bind="attrs" v-on="on">
+            <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
+        </template>
+
+        <v-list dense>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>Edit</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>Delete</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>Excel</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>PDF</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </PageHeader>
 
     <div class="pa-5">
@@ -21,7 +44,7 @@
 
       <v-card flat class="mt-4" v-if="app.tags">
         <v-card-text class="pa-0">
-          <v-chip class="mr-2" :key="item.id" v-for="item in app.tags">
+          <v-chip class="mr-2 mb-2" :key="item.id" v-for="item in app.tags">
             {{ item.tag.label }}
           </v-chip>
         </v-card-text>
@@ -101,7 +124,7 @@
                       | dateFormat("DD/MM/YYYY HH:mm:ss")
                   }}
                 </div>
-                <div style="white-space: pre">{{ note.text }}</div>
+                <div style="white-space: pre-wrap">{{ note.text }}</div>
               </div>
             </v-timeline-item>
           </v-timeline>

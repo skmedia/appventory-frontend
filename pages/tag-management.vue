@@ -27,7 +27,7 @@
           </v-col>
           <v-col class>
             <v-card flat v-if="isHome" class="mt-12">
-              <v-alert type="info" outlined> Select tag group </v-alert>
+              <v-alert type="info"> Select tag group </v-alert>
             </v-card>
             <NuxtChild v-else />
           </v-col>

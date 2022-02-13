@@ -1,7 +1,7 @@
 <template>
   <v-container fluid fill-height>
     <v-layout justify-center>
-      <v-flex xs12 sm8 md4>
+      <v-flex xs12 sm8 md6 lg4>
         <v-layout align-center justify-center class="ma-10">
           <v-subheader class="text-overline">AppVentory</v-subheader>
           <v-icon x-large>mdi-domain</v-icon>
@@ -29,6 +29,16 @@
               @blur="$v.login.password.$touch()"
             />
 
+            <v-select
+              v-model="login.account"
+              v-if="this.accounts.length"
+              :items="accounts"
+              item-text="name"
+              item-value="id"
+              outlined
+              label="Select an account"
+            ></v-select>
+
             <v-btn class="primary" block @click="userLogin">Login</v-btn>
           </v-card-text>
 
@@ -51,9 +61,11 @@ export default {
   layout: "minimal",
   data() {
     return {
+      accounts: [],
       login: {
         email: "",
         password: "",
+        account: "",
       },
     };
   },
@@ -89,10 +101,31 @@ export default {
       if (this.$v.$invalid) {
         return;
       }
+
       try {
-        let response = await this.$auth.loginWith("local", {
-          data: this.login,
-        });
+        if (this.login.account) {
+          let response = await this.$auth.loginWith("local", {
+            data: this.login,
+          });
+          return;
+        }
+
+        const userAccounts = await this.$axios.post(
+          "/api/auth/account",
+          this.login
+        );
+        const accounts = userAccounts.data.map(({ account }) => account);
+        if (accounts.length === 0) {
+          return;
+        }
+        if (accounts.length === 1) {
+          this.login.account = accounts[0].id;
+          let response = await this.$auth.loginWith("local", {
+            data: this.login,
+          });
+        } else {
+          this.accounts = accounts;
+        }
       } catch (err) {
         console.log(err);
       }

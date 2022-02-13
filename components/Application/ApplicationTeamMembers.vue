@@ -54,7 +54,7 @@
 
             <v-list-item-icon>
               <v-btn @click="removeTeamMember(teamMember.id)" x-small icon>
-                <v-icon>mdi-delete-outline</v-icon>
+                <v-icon>mdi-delete</v-icon>
               </v-btn>
             </v-list-item-icon>
           </v-list-item>
