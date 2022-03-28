@@ -1,6 +1,13 @@
 <template>
   <v-card outlined>
-    <v-card-title>Team members</v-card-title>
+    <v-card-title>
+      <v-row no-gutters class="d-flex">
+        <v-col cols="12" md="8" class="align-self-center">Team members</v-col>
+        <v-col class="mt-2 mt-md-0 text-md-right text-left">
+          <slot name="extra-title"></slot>
+        </v-col>
+      </v-row>
+    </v-card-title>
     <v-card outlined class="mx-4 pa-4">
       <v-row>
         <v-col cols="12" md="5">
@@ -34,7 +41,6 @@
         </v-col>
       </v-row>
     </v-card>
-
     <v-card outlined class="ma-4" v-if="teamMembers.length">
       <v-list>
         <template v-for="(teamMember, index) in teamMembers">
@@ -63,13 +69,18 @@
         </template>
       </v-list>
     </v-card>
+    <v-card v-else>
+      <v-card-text>no team members yet</v-card-text>
+    </v-card>
   </v-card>
 </template>
 
 <script>
 import { v4 as uuidv4 } from "uuid";
-import { sortBy } from "lodash";
+import { sortBy, get } from "lodash";
 import { required } from "vuelidate/lib/validators";
+
+const valueRequired = (value) => !!get(value, "value");
 
 const createTeamMember = ({ tag = null, user = null } = {}) => ({
   tag,
@@ -86,9 +97,11 @@ export default {
     teamMember: {
       tag: {
         required,
+        valueRequired,
       },
       user: {
         required,
+        valueRequired,
       },
     },
   },
@@ -112,12 +125,16 @@ export default {
       const errors = [];
       if (!this.$v.teamMember.tag.$dirty) return errors;
       !this.$v.teamMember.tag.required && errors.push("Role is required.");
+      !this.$v.teamMember.tag.valueRequired &&
+        errors.push("Please select a role.");
       return errors;
     },
     memberUserErrors() {
       const errors = [];
       if (!this.$v.teamMember.user.$dirty) return errors;
       !this.$v.teamMember.user.required && errors.push("User is required.");
+      !this.$v.teamMember.user.valueRequired &&
+        errors.push("Please select a user.");
       return errors;
     },
   },

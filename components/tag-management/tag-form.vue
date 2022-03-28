@@ -58,7 +58,6 @@ const createTag = ({ id = uuidv4(), label = "", tagType = null } = {}) => ({
   tagType,
 });
 export default {
-  name: "TagForm",
   props: {
     incomingTag: {
       type: Object,

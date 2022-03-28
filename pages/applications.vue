@@ -99,22 +99,11 @@
       </v-card-text>
     </v-card>
 
-    <!--
-    <div class="d-flex pa-4">
-      <h2 class="float-left">Applications</h2>
-      <v-btn class="ml-auto" elevation="2" @click="showApplicationForm = true">
-        Add
-      </v-btn>
-    </div>
-    -->
-
-    <ApplicationForm
+    <ApplicationAddApplicationForm
       :show="showApplicationForm"
-      :app="activeApplication"
+      @application-created="onApplicationCreated"
       @hide-form="hideApplicationForm"
-      @save-application="saveApplication"
     />
-    <ConfirmDialog ref="confirm" />
   </div>
 </template>
 
@@ -200,6 +189,14 @@ export default {
         this.loading = false;
       });
     },
+    onApplicationCreated() {
+      this.$root.notification.show({
+        message: "Application created",
+        color: "success",
+      });
+      this.showApplicationForm = false;
+      this.getDataFromApi();
+    },
     hideApplicationForm() {
       this.showApplicationForm = false;
       this.activeApplication = Object.assign({});
@@ -220,60 +217,6 @@ export default {
           .then((r) => {
             this.getDataFromApi();
           });
-      }
-    },
-    async saveApplication({
-      application,
-      newFiles,
-      filesToDelete,
-      isNewApplication,
-      closeModal,
-    }) {
-      const params = application;
-      let filesToAdd = [];
-      if (newFiles.length) {
-        let formData = new FormData();
-        formData.append("id", application.id);
-        newFiles.forEach((f) => {
-          formData.append("files", f.file);
-          formData.append("fileDescriptions[]", f.description);
-        });
-        const fileUploadResponse = await this.$axios.post(
-          "/api/v1/assets/upload",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        filesToAdd = fileUploadResponse.data.fileList;
-      }
-
-      try {
-        if (isNewApplication) {
-          await this.$axios.post("/api/v1/applications", {
-            ...application,
-            filesToAdd,
-          });
-        } else {
-          await this.$axios.put(`/api/v1/applications/${application.id}`, {
-            ...application,
-            filesToAdd,
-            filesToDelete,
-          });
-        }
-
-        this.getDataFromApi();
-        if (closeModal) {
-          this.hideApplicationForm();
-        }
-        this.$root.notification.show({ message: "Application saved" });
-      } catch (e) {
-        this.$root.notification.show({
-          message: "An error occurred",
-          color: "red",
-        });
       }
     },
     async loadData() {

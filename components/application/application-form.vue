@@ -205,18 +205,18 @@ export default {
         this.application = createApplication();
         this.isNewApplication = true;
         this.filesToUpload = [];
+
+        if (this.app.id) {
+          this.isNewApplication = false;
+          this.application = val;
+          this.loadApplication();
+        }
+
         this.$nextTick(() => {
           setTimeout(() => {
             this.$uiHelper.scrollTo("dialog-header");
           });
         });
-      }
-    },
-    app: function (val) {
-      if (val.id) {
-        this.isNewApplication = false;
-        this.application = val;
-        this.loadApplication();
       }
     },
   },
@@ -233,12 +233,63 @@ export default {
         this.$uiHelper.scrollTo("dialog-header");
         return;
       }
-      this.$emit("save-application", {
+      this.saveApplication({
         application: this.application,
         newFiles: this.filesToUpload,
         isNewApplication: this.isNewApplication,
         closeModal,
       });
+    },
+    async saveApplication({
+      application,
+      newFiles,
+      filesToDelete,
+      isNewApplication,
+      closeModal,
+    }) {
+      let filesToAdd = [];
+      if (newFiles.length) {
+        let formData = new FormData();
+        formData.append("id", application.id);
+        newFiles.forEach((f) => {
+          formData.append("files", f.file);
+          formData.append("fileDescriptions[]", f.description);
+        });
+        const fileUploadResponse = await this.$axios.post(
+          "/api/v1/assets/upload",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        filesToAdd = fileUploadResponse.data.fileList;
+      }
+      try {
+        if (isNewApplication) {
+          const app = await this.$axios.post("/api/v1/applications", {
+            ...application,
+            filesToAdd,
+          });
+        } else {
+          const app = await this.$axios.put(
+            `/api/v1/applications/${application.id}`,
+            {
+              ...application,
+              filesToAdd,
+              filesToDelete,
+            }
+          );
+        }
+        this.$emit("application-saved", application);
+        this.$root.notification.show({ message: "Application saved" });
+      } catch (e) {
+        this.$root.notification.show({
+          message: "An error occurred",
+          color: "red",
+        });
+      }
     },
     loadApplication() {
       return this.$applicationApi.single(this.app.id).then((application) => {

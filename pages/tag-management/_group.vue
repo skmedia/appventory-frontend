@@ -69,25 +69,22 @@
       :tag-group-id="tagGroupId"
       @hide-form="hideTagForm"
       @save-tag="saveTag"
-    ></TagForm>
-    <ManageTagTypes
+    />
+    <TagManagementManageTagTypes
       :show="showTagTypeManagement"
       :tag-group="tagGroup"
       @hide="hideTagTypeManagement"
-    ></ManageTagTypes>
+    />
     <ConfirmDialog ref="confirm" />
   </div>
 </template>
 
 <script>
 import { debounce } from "lodash";
-import TagForm from "../../components/TagManagement/TagForm.vue";
-import ManageTagTypes from "../../components/TagManagement/ManageTagTypes.vue";
 
 let apiSearch;
 
 export default {
-  components: [TagForm, ManageTagTypes],
   data() {
     return {
       selectedTag: {},
@@ -124,7 +121,7 @@ export default {
   },
   computed: {
     tagGroupId: function () {
-      return this.$route.params.tagGroup;
+      return this.$route.params.group;
     },
   },
   watch: {
@@ -241,6 +238,5 @@ export default {
       }
     },
   },
-  components: { TagForm, ManageTagTypes },
 };
 </script>

@@ -47,7 +47,7 @@ export default {
   },
   computed: {
     isHome: function () {
-      return !!this.$route.params.tagGroup === false;
+      return !!this.$route.params.group === false;
     },
   },
   watch: {},
