@@ -10,11 +10,11 @@
     <v-card id="top">
       <DialogHeader :title="application.name" @close="$emit('hide')" />
       <v-card-text class="mt-8">
-        <ApplicationTeamMembers v-model="teamMembers">
+        <ApplicationNotes v-model="notes">
           <template v-slot:extra-title>
             <v-btn class="primary" @click="save()">save</v-btn>
           </template>
-        </ApplicationTeamMembers>
+        </ApplicationNotes>
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -34,24 +34,24 @@ export default {
   watch: {
     show: function (value) {
       if (value) {
-        this.teamMembers = this.application.teamMembers;
+        this.notes = this.application.notes;
       } else {
-        this.teamMembers = [];
+        this.notes = [];
       }
     },
   },
   data: function () {
     return {
-      teamMembers: [],
+      notes: [],
     };
   },
   methods: {
     async save() {
       try {
         const results = await this.$axios.put(
-          `/api/v1/applications/${this.application.id}/team-members`,
+          `/api/v1/applications/${this.application.id}/notes`,
           {
-            teamMembers: this.teamMembers,
+            notes: this.notes,
           }
         );
         this.$root.notification.show({

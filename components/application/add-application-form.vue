@@ -47,7 +47,7 @@
               counter
               v-model="application.description"
               label="Description"
-              hint="Application description, what does it do?"
+              hint="Application description"
               outlined
               persistent-hint
               required
@@ -137,7 +137,6 @@ export default {
         this.$v.$reset();
         this.application = createApplication();
         this.isNewApplication = true;
-        this.filesToUpload = [];
         this.$nextTick(() => {
           setTimeout(() => {
             this.$uiHelper.scrollTo("dialog-header");
@@ -159,7 +158,6 @@ export default {
         this.$uiHelper.scrollTo("dialog-header");
         return;
       }
-
       try {
         await this.$axios.post("/api/v1/applications", {
           ...this.application,

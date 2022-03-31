@@ -1,6 +1,14 @@
 <template>
   <v-card outlined>
-    <v-card-title>Links</v-card-title>
+    <v-card-title>
+      <v-row no-gutters class="d-flex">
+        <v-col cols="12" md="8" class="align-self-center">Links</v-col>
+        <v-col class="mt-2 mt-md-0 text-md-right text-left">
+          <slot name="extra-title"></slot>
+        </v-col>
+      </v-row>
+    </v-card-title>
+
     <v-card outlined class="mx-4 pa-4">
       <v-row>
         <v-col cols="12" md="5">
@@ -60,6 +68,9 @@
           </v-divider>
         </template>
       </v-list>
+    </v-card>
+    <v-card v-else>
+      <v-card-text>no links yet</v-card-text>
     </v-card>
   </v-card>
 </template>

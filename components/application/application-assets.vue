@@ -1,6 +1,13 @@
 <template>
   <v-card outlined>
-    <v-card-title>Assets</v-card-title>
+    <v-card-title>
+      <v-row no-gutters class="d-flex">
+        <v-col cols="12" md="8" class="align-self-center">Assets</v-col>
+        <v-col class="mt-2 mt-md-0 text-md-right text-left">
+          <slot name="extra-title"></slot>
+        </v-col>
+      </v-row>
+    </v-card-title>
     <div class="px-4">
       <v-file-input
         v-model="selectedFiles"

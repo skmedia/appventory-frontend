@@ -8,19 +8,20 @@
     overlay-opacity=".7"
   >
     <v-card id="top">
-      <DialogHeader :title="application.name" @close="$emit('hide')" />
+      <DialogHeader title="Manage application" @close="$emit('hide')" />
       <v-card-text class="mt-8">
-        <ApplicationTeamMembers v-model="teamMembers">
+        <ApplicationGeneral v-model="app">
           <template v-slot:extra-title>
             <v-btn class="primary" @click="save()">save</v-btn>
           </template>
-        </ApplicationTeamMembers>
+        </ApplicationGeneral>
       </v-card-text>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
+import { cloneDeep } from "lodash";
 export default {
   props: {
     application: {
@@ -34,24 +35,24 @@ export default {
   watch: {
     show: function (value) {
       if (value) {
-        this.teamMembers = this.application.teamMembers;
+        this.app = cloneDeep(this.application);
       } else {
-        this.teamMembers = [];
+        this.app = {};
       }
     },
   },
   data: function () {
     return {
-      teamMembers: [],
+      app: {},
     };
   },
   methods: {
     async save() {
       try {
         const results = await this.$axios.put(
-          `/api/v1/applications/${this.application.id}/team-members`,
+          `/api/v1/applications/${this.application.id}`,
           {
-            teamMembers: this.teamMembers,
+            ...this.app,
           }
         );
         this.$root.notification.show({

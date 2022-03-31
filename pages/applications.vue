@@ -69,10 +69,6 @@
           </template>
 
           <template #item.actions="{ item }">
-            <v-btn small icon @click="editItem(item)">
-              <v-icon small> mdi-pencil </v-icon>
-            </v-btn>
-
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -104,6 +100,8 @@
       @application-created="onApplicationCreated"
       @hide-form="hideApplicationForm"
     />
+
+    <ConfirmDialog ref="confirm" />
   </div>
 </template>
 
@@ -199,11 +197,6 @@ export default {
     },
     hideApplicationForm() {
       this.showApplicationForm = false;
-      this.activeApplication = Object.assign({});
-    },
-    editItem(item) {
-      this.showApplicationForm = true;
-      this.activeApplication = Object.assign({}, item);
     },
     async deleteItem(item) {
       if (
@@ -215,6 +208,10 @@ export default {
         await this.$axios
           .delete(`/api/v1/applications/${item.id}`)
           .then((r) => {
+            this.$root.notification.show({
+              message: "Application deleted",
+              color: "success",
+            });
             this.getDataFromApi();
           });
       }

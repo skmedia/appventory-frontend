@@ -171,7 +171,7 @@ export default {
     return {
       showSearch: false,
       clipped: false,
-      drawer: true,
+      drawer: false,
       fixed: false,
       items: [
         {

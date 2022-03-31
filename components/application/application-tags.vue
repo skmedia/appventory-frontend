@@ -1,20 +1,22 @@
 <template>
-  <v-autocomplete
-    v-model="applicationTags"
-    outlined
-    :items="tags"
-    item-value="id"
-    item-text="label"
-    chips
-    deletable-chips
-    :hint="hint"
-    :placeholder="placeholder"
-    :label="label"
-    persistent-hint
-    return-object
-    multiple
-    solo
-  />
+  <div>
+    <v-autocomplete
+      v-model="applicationTags"
+      outlined
+      :items="tags"
+      item-value="id"
+      item-text="label"
+      chips
+      deletable-chips
+      :hint="hint"
+      :placeholder="placeholder"
+      :label="label"
+      persistent-hint
+      return-object
+      multiple
+      solo
+    />
+  </div>
 </template>
 
 <script>

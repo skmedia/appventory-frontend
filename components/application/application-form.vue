@@ -187,7 +187,6 @@ export default {
         errors.push("Client is required.");
       return errors;
     },
-
     descriptionErrors() {
       const errors = [];
       if (!this.$v.application.description.$dirty) return errors;
