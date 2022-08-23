@@ -12,6 +12,12 @@
     </v-card-title>
     <v-card-text>
       <v-row>
+        <v-col>
+          <v-switch
+            v-model="application.active"
+            :label="`active project`"
+          ></v-switch>
+        </v-col>
         <v-col cols="12">
           <v-text-field
             v-model="application.name"
@@ -61,6 +67,7 @@
           <ApplicationTags
             hint="List of tags associated with this application"
             v-model="application.tags"
+            :show-type="true"
           />
         </v-col>
       </v-row>
@@ -92,9 +99,11 @@ export default {
   computed: {
     application: {
       get() {
+        console.log("get value");
         return this.value;
       },
       set(value) {
+        console.log("set value");
         this.$emit("input", value);
       },
     },
@@ -119,7 +128,11 @@ export default {
       return errors;
     },
   },
-  watch: {},
+  watch: {
+    value: function (v) {
+      this.application = v;
+    },
+  },
   created() {
     this.loadClients();
   },

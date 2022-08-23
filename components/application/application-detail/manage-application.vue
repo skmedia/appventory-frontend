@@ -61,8 +61,13 @@ export default {
         });
         this.$emit("saved");
       } catch (e) {
+        let msg = e;
+        try {
+          msg = e.response.data.message.join(" /");
+        } catch (e) {}
+
         this.$root.notification.show({
-          message: "Error: " + e,
+          message: msg,
           color: "error",
         });
       }

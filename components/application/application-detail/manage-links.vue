@@ -9,7 +9,6 @@
   >
     <v-card id="top">
       <DialogHeader :title="application.name" @close="$emit('hide')" />
-      @close="$emit('hide')" />
       <v-card-text class="mt-8">
         <ApplicationLinks v-model="links">
           <template v-slot:extra-title>

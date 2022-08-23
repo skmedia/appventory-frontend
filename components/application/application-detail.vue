@@ -8,6 +8,10 @@
     </PageHeader>
 
     <div class="pa-5">
+      <v-alert type="warning" :value="!app.active">
+        Project is not active
+      </v-alert>
+
       <v-card outlined class="pa-4 pt-2">
         <ApplicationApplicationDetailBtnManage
           :click-handler="
@@ -32,6 +36,7 @@
         </v-card-text>
       </v-card>
 
+      <!--
       <v-card outlined class="mt-6">
         <SectionHeader>
           <template v-slot:title>
@@ -64,6 +69,7 @@
           </div>
         </div>
       </v-card>
+      -->
 
       <v-card outlined class="mt-6">
         <SectionHeader>

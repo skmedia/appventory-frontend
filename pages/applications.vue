@@ -11,40 +11,43 @@
         </v-btn>
       </PageHeader>
 
-      <v-container fluid>
-        <v-row>
-          <v-col>
-            <v-text-field
-              v-model="filter.search"
-              append-icon="mdi-magnify"
-              label="Search application or client"
-              outlined
-            />
-          </v-col>
-          <v-col cols="6">
-            <div class="d-flex">
+      <v-card outlined class="pa-0 ma-4">
+        <v-container fluid class="pa-4 ma-0">
+          <v-row no-gutters>
+            <v-col cols="9">
               <ApplicationTags
                 label="Application tags"
-                class="ml-4"
                 v-model="filter.tags"
+                :show-type="true"
               ></ApplicationTags>
-
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-checkbox
-                    v-bind="attrs"
-                    v-on="on"
-                    v-model="filter.allTags"
-                    class="ml-2"
-                    label="All"
-                  ></v-checkbox>
-                </template>
-                <span>Tooltip</span>
-              </v-tooltip>
-            </div>
-          </v-col>
-        </v-row>
-      </v-container>
+            </v-col>
+            <v-col class="ml-auto pl-4">
+              <v-checkbox
+                v-model="filter.allTags"
+                label="App must have all tags"
+              ></v-checkbox>
+            </v-col>
+          </v-row>
+          <v-row no-gutters>
+            <v-col cols="9">
+              <v-text-field
+                v-model="filter.search"
+                append-icon="mdi-magnify"
+                hide-details
+                label="Search application or client"
+                outlined
+              />
+            </v-col>
+            <v-col class="ml-auto pl-4">
+              <v-checkbox
+                v-model="filter.activeOnly"
+                hide-details
+                label="Active projects only"
+              ></v-checkbox>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-card>
 
       <v-card-text>
         <v-data-table
@@ -54,13 +57,9 @@
           :server-items-length="total"
           :loading="loading"
         >
-          <template #item.description="{ item }">
-            <span v-if="item.description">
-              {{
-                item.description.length > 50
-                  ? item.description.substr(0, 47) + "..."
-                  : item.description
-              }}
+          <template #item.tags="{ item }">
+            <span v-if="item.tags">
+              {{ item.tags.map((t) => t.label).join(", ") }}
             </span>
           </template>
 
@@ -87,6 +86,15 @@
             <v-btn small icon @click="deleteItem(item)">
               <v-icon small> mdi-delete </v-icon>
             </v-btn>
+
+            <v-tooltip top v-if="!item.active">
+              <template v-slot:activator="{ on, attrs }">
+                <v-icon v-bind="attrs" v-on="on" color="red" small>
+                  mdi-sync-off
+                </v-icon>
+              </template>
+              <span>Application is not active</span>
+            </v-tooltip>
           </template>
           <template #no-data>
             <v-btn color="primary"> Reset </v-btn>
@@ -106,9 +114,9 @@
 </template>
 
 <script>
-import { debounce } from "lodash";
-
-let apiSearch;
+import Vue from "vue";
+import { debounce, get, isArray } from "lodash";
+import * as qs from "qs";
 
 export default {
   data() {
@@ -121,6 +129,8 @@ export default {
       filter: {
         search: "",
         tags: null,
+        allTags: false,
+        activeOnly: true,
       },
       items: [],
       loading: true,
@@ -140,10 +150,10 @@ export default {
           value: "client.name",
         },
         {
-          text: "Description",
+          text: "Tags",
           align: "start",
           sortable: false,
-          value: "description",
+          value: "tags",
         },
         {
           text: "Created",
@@ -161,23 +171,68 @@ export default {
     };
   },
   watch: {
-    options: {
+    $route: {
       handler() {
-        apiSearch();
+        function dataTableOptionsDecoder(str) {
+          if (str === "true") return true;
+          if (str === "false") return false;
+
+          // if str looks like a numeric string, return an int
+          // e.g. itemsPerPage, page
+          if (!isNaN(Number(str))) {
+            return parseInt(str);
+          }
+          return str;
+        }
+        this.options = qs.parse(this.$route.query?.options, {
+          decoder: dataTableOptionsDecoder,
+        });
+
+        let filterFromQuery = qs.parse(this.$route.query?.filter, {
+          decoder: function (str) {
+            if (str === "true") return true;
+            if (str === "false") return false;
+            return str;
+          },
+        });
+        let tags = get(filterFromQuery, "tags", []);
+        this.filter = {
+          tags: tags,
+          search: filterFromQuery.search,
+          allTags: filterFromQuery.allTags,
+          activeOnly: filterFromQuery.activeOnly,
+        };
+
+        this.apiSearch();
       },
-      deep: true,
+      immediate: true,
     },
     filter: {
-      handler() {
-        apiSearch();
+      handler(value) {
+        const query = Object.assign({}, this.$route.query);
+        query.filter = qs.stringify(value, {
+          encodeValuesOnly: true,
+        });
+        this.$router.push({ query });
+      },
+      deep: true,
+    },
+    options: {
+      handler(value) {
+        const query = Object.assign({}, this.$route.query);
+        query.options = qs.stringify(value, {
+          encodeValuesOnly: true,
+        });
+        this.$router.push({ query });
       },
       deep: true,
     },
   },
-  created() {
-    apiSearch = debounce(this.getDataFromApi, 250);
-  },
+  created() {},
   methods: {
+    apiSearch: debounce(function () {
+      this.getDataFromApi();
+    }, 250),
     getDataFromApi() {
       this.loading = true;
       this.loadData().then((data) => {
@@ -219,6 +274,8 @@ export default {
     async loadData() {
       const params = {
         ...this.options,
+        activeOnly: this.filter.activeOnly,
+        allTags: this.filter.allTags,
         search: this.filter.search,
         tags: this.filter.tags?.map(({ id }) => id),
       };

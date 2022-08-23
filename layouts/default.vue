@@ -37,28 +37,6 @@
         </v-list-item>
       </v-list>
       <v-divider />
-
-      <!--
-      <template #append>
-        <v-divider />
-        <v-list-item>
-          <v-list-item-avatar size="36">
-            <v-avatar>{{ $auth.user.firstName }}</v-avatar>
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title v-text="'auth.user.firstName'" />
-            <v-list-item-subtitle class="mt-1">
-              <v-btn x-small @click="toggleSettings()">
-                <v-icon x-small class="mr-1"> mdi-cogs </v-icon>Settings
-              </v-btn>
-              <v-btn x-small @click.prevent="logout()">
-                <v-icon x-small class="mr-1"> mdi-logout </v-icon>Logout
-              </v-btn>
-            </v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-      </template>
-      -->
     </v-navigation-drawer>
     <v-app-bar app flat class="blue">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
@@ -70,12 +48,6 @@
         </v-layout>
       </div>
 
-      <!--
-      <v-spacer />
-      <v-btn icon @click.stop="rightDrawer = !rightDrawer">
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
-      -->
       <v-spacer></v-spacer>
 
       <v-menu offset-y v-if="$auth.loggedIn">
@@ -90,17 +62,6 @@
           </div>
         </template>
         <v-list>
-          <!--
-          <v-list-item @click="toggleSettings()">
-            <v-list-item-action>
-              <v-icon>mdi-cogs</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title v-text="'Settings'" />
-            </v-list-item-content>
-          </v-list-item>
-          -->
-
           <v-list-item
             :key="account.id"
             v-for="account in $auth.user.accounts"
@@ -145,21 +106,9 @@
     <v-main class="pb-4">
       <v-container fluid class="pa-8">
         <Nuxt />
-        <Settings />
         <Notification ref="notification" />
       </v-container>
     </v-main>
-
-    <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
-      <v-list>
-        <v-list-item @click.native="right = !right">
-          <v-list-item-action>
-            <v-icon light> mdi-repeat </v-icon>
-          </v-list-item-action>
-          <v-list-item-title>Switch drawer (click me)</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
   </v-app>
 </template>
 
@@ -171,7 +120,7 @@ export default {
     return {
       showSearch: false,
       clipped: false,
-      drawer: false,
+      drawer: null,
       fixed: false,
       items: [
         {
@@ -202,7 +151,6 @@ export default {
       ],
       miniVariant: false,
       right: true,
-      rightDrawer: false,
     };
   },
   mounted() {

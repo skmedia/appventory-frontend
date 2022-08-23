@@ -1,22 +1,20 @@
 <template>
-  <div>
-    <v-autocomplete
-      v-model="applicationTags"
-      outlined
-      :items="tags"
-      item-value="id"
-      item-text="label"
-      chips
-      deletable-chips
-      :hint="hint"
-      :placeholder="placeholder"
-      :label="label"
-      persistent-hint
-      return-object
-      multiple
-      solo
-    />
-  </div>
+  <v-autocomplete
+    v-model="applicationTags"
+    outlined
+    :items="tags"
+    item-value="id"
+    :item-text="labelGetter(showType)"
+    chips
+    deletable-chips
+    :hint="hint"
+    :placeholder="placeholder"
+    :label="label"
+    persistent-hint
+    return-object
+    multiple
+    solo
+  />
 </template>
 
 <script>
@@ -38,6 +36,10 @@ export default {
     label: {
       type: String,
       default: "Tags",
+    },
+    showType: {
+      type: Boolean,
+      default: false,
     },
   },
   data: function () {
@@ -62,6 +64,14 @@ export default {
     this.loadTags();
   },
   methods: {
+    labelGetter(showType) {
+      return (item) => {
+        if (showType && typeof item.tagType !== "undefined") {
+          return item.label + " (" + item.tagType.text + ")";
+        }
+        return item.label;
+      };
+    },
     loadTags() {
       return this.$axios
         .$get("/api/v1/tags/for-select/application-tags")
