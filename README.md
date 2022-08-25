@@ -1,4 +1,4 @@
-# AppVentory UI - frontend for AppVento.
+# AppVentory UI - frontend for AppVentory.
 
 AppVentory is a tool to manage applications.
 
@@ -6,7 +6,7 @@ Built with [nuxt](https://nuxtjs.org/) and [vuetifyjs](https://vuetifyjs.com/).
 
 ![img.png](docs/img_1.png)
 
-![img.png](docs/img_2.png)
+![img.png](docs/img_listing.png)
 
 ![img.png](docs/img_3.png)
 
